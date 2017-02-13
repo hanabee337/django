@@ -1,7 +1,6 @@
 from django import forms
 
-class PostForm(forms):
+
+class LoginForm(forms.Form):
     username = forms.CharField(max_length=100)
-    password = forms.CharField(
-        widget=forms.Textarea
-    )
+    password = forms.CharField(max_length=100)

@@ -1,13 +1,25 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<h1>Login</h1>
-</body>
-</html>
+{% extends 'member/base.html' %}
+
+{% block subtitle %}Log In{% endblock %}
+
+{% block content %}
+
+<!--html파일에서 POST요청을 보내기 위해-->
+<!--form을 정의하고, input 요소 2개의 name을-->
+<!--username, password로 설정하고ㅗ-->
+<!--button type 'submit'을 실행-->
+<form action="" method="POST">{% csrf_token %}
+    <fieldset>
+        <legend>ID/PW</legend>
+
+        {% for field in forms %}
+        <div>
+            {{ field.label_tag }}
+            {{ field }}
+        </div>
+        {% endfor %}
+
+        <button type="submit">login</button>
+    </fieldset>
+</form>
+{% endblock %}

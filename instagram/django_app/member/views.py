@@ -11,6 +11,8 @@ from django.contrib.auth import authenticate
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from member.forms import LoginForm
+
 
 def login(request):
     print('login')
@@ -42,5 +44,16 @@ def login(request):
             return HttpResponse('Login Fail')
     # GET method로 요청이 왔을 경우,
     else:
+
         # member/login.html 템플릿을 render하여 return 하도록 함
-        return render(request, 'member/login.html')
+        # return render(request, 'member/login.html')
+
+        # html파일에서 POST요청을 보내기 위해
+        # form을 정의하고, input 요소 2개의 name을
+        # username, password로 설정하고ㅗ
+        # button type 'submit'을 실행
+        form = LoginForm()
+        context = {
+            'forms': form,
+        }
+        return render(request, 'member/login.html', context)
