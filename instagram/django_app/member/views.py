@@ -7,14 +7,14 @@
 5. settings.py에 TEMPLATES_DIR 변수를 할당하고 (os.path.join(BASE_DIR, 'templates'))
     TEMPLATES 설정의 DIRS에 추가
 """
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 from member.forms import LoginForm
 
 
-def login(request):
+def login_cf(request):
     print('login')
 
     """
@@ -30,18 +30,23 @@ def login(request):
         # username, password로 설정하고ㅗ
         # button type 'submit'을 실행
 
-        # 전달되어온 POST  데이터에서 'username'과 'password'키의 값들을 사용
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(username=username, password=password)
-        # 만약 인증이 정상적으로 완료되었다면
-        # 해당하는 username과 password에 일치하는 User개게가 존재할 경우
-        if user is not None:
-            login(request, user)
-            return HttpResponse('Login Success')
-        # 인증에 실패할 경우, 해당하는 username과 password에 일치하는 User개게가 존재하지 않을 경우
-        else:
-            return HttpResponse('Login Fail')
+        # LoginForm을 사용
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            # 전달되어온 POST  데이터에서 'username'과 'password'키의 값들을 사용
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(username=username, password=password)
+            # 만약 인증이 정상적으로 완료되었다면
+            # 해당하는 username과 password에 일치하는 User개게가 존재할 경우
+            if user is not None:
+                login(request, user)
+                # return HttpResponse('Login Success')
+                return redirect('/admin')
+            # 인증에 실패할 경우, 해당하는 username과 password에 일치하는 User개게가 존재하지 않을 경우
+            else:
+                # return HttpResponse('Login Fail')
+                form.add_error(None, 'ID or PW Incorrect')
     # GET method로 요청이 왔을 경우,
     else:
 
@@ -50,10 +55,13 @@ def login(request):
 
         # html파일에서 POST요청을 보내기 위해
         # form을 정의하고, input 요소 2개의 name을
-        # username, password로 설정하고ㅗ
+        # username, password로 설정하고
         # button type 'submit'을 실행
+
+        # 빈 LoginForm 객체 생성
         form = LoginForm()
-        context = {
-            'forms': form,
-        }
-        return render(request, 'member/login.html', context)
+
+    context = {
+        'forms': form,
+    }
+    return render(request, 'member/login.html', context)

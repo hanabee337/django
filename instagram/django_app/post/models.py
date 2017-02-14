@@ -12,7 +12,7 @@ from member.models import MyUser
 class Post(models.Model):
     author = models.ForeignKey(MyUser)
     photo = models.ImageField(
-        upload_to='pst', blank=True
+        upload_to='post', blank=True
     )
     content = models.TextField(blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
@@ -22,6 +22,7 @@ class Post(models.Model):
     # user가 post쪽에 영향을 주니까, 여기에서 설정
     like_users = models.ManyToManyField(
         MyUser,
+        blank=True,
         through='PostLike',
         # 역참조는 언제쓰나? user에서 post로 갈 때,
         # 내가 like를 했던 post의 set을 가져오고 싶다할 때, 역참조 가능하다.
@@ -102,12 +103,13 @@ class PostLike(models.Model):
     # post.id는  테이블까지 join을 시킨 다음에 데이터를 가져오는데,
     # post_id 는 거기까지 안간다. db table이 이미 만들어져 있다.
     def __str__(self):
-        return 'Post[{}]\'s Like[{}]'.format(
+        return 'Post[{}]\'s Like[{}, Author[{}]'.format(
             self.post_id,
-            self.id
+            self.id,
+            self.post.author,
         )
 
-    # 좋아요를 두 번 눌러도 중복이 되지 않게 하기 위해.
+    # 한 유저가 좋아요를 두 번 눌러도 중복이 되지 않게 하기 위해.
     class Meta:
         unique_together = (
             ('user', 'post')

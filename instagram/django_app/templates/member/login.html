@@ -9,17 +9,15 @@
 <!--username, password로 설정하고ㅗ-->
 <!--button type 'submit'을 실행-->
 <form action="" method="POST">{% csrf_token %}
-    <fieldset>
-        <legend>ID/PW</legend>
-
+    {% if form.non_field_errors %}
+        {{ form.non_field_errors }}
+    {% endif  %}
         {% for field in forms %}
         <div>
             {{ field.label_tag }}
             {{ field }}
         </div>
         {% endfor %}
-
         <button type="submit">login</button>
-    </fieldset>
 </form>
 {% endblock %}
