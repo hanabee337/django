@@ -1,87 +1,59 @@
-from django.db import models, IntegrityError
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import PermissionsMixin
+from django.db import models
 
 
-# from django.contrib.auth import
+class MyUserManager(BaseUserManager):
+    # pass
+    def create_user(self, username, password=None):
+        user = self.model(
+            username=username
+        )
+        user.set_password(password)
+        user.save()
+        return user
 
-# Create your models here.
+    def create_superuser(self, username, password):
+        # return self.create_user(username, password)
+        user = self.model(
+            username=username
+        )
+        user.set_password(password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.save()
+        return user
 
-class MyUser(models.Model):
-    username = models.CharField('유저네임', max_length=200,
-                                unique=True)
-    last_name = models.CharField(max_length=200)
-    first_name = models.CharField(max_length=200)
-    nickname = models.CharField('닉네임', max_length=24)
-    email = models.EmailField('이메일', blank=True)
-    date_joined = models.DateTimeField(auto_now_add=True)
-    last_modified = models.DateTimeField(auto_now=True)
 
-    following = models.ManyToManyField(
-        'self',
-        related_name='follower_set',
-        symmetrical=False,
-        blank=True,
+class MyUser(PermissionsMixin, AbstractBaseUser):
+    # pass
+
+    CHOICES_GENDER = (
+        ('m', 'Male'),
+        ('f', 'Female')
     )
 
-    def __str__(self):
-        return self.username
+    # 기본 값
+    # password
+    # last_login
+    # is_active
+    # USERNAME이라는 field를 만들고 , USERANME_FIELD에 추가한 후, makemigrations 해보기
+    username = models.CharField(max_length=30, unique=True)
+    nickname = models.CharField(max_length=20)
+    email = models.EmailField(blank=True)
+    gender = models.CharField(max_length=1, choices=CHOICES_GENDER)
 
-    # shell에서 일일이 작업하는 게 귀찮으니...
-    @staticmethod
-    def create_dummy_user(num):
-        """
-        num 갯수만큼 User1~User<num>까지 임의의 유저를 생성한다.
-        :return: 생성된 유저 수
-        """
-        import random
-        last_name_list = ['방', '이', '김', '최']
-        first_name_list = ['민아', '혜리', '수아', '소영']
-        nickname_list = ['만득', '노랭', '우렁', '근덕']
-        created_count = 0
+    is_staff = models.BooleanField(default=False)
 
-        for i in range(num):
-            try:
-                MyUser.objects.create(
-                    username='User{}'.format(i + 1),
-                    last_name=random.choice(last_name_list),
-                    first_name=random.choice(first_name_list),
-                    nickname=random.choice(nickname_list),
-                )
-                created_count += 1
-            except IntegrityError as e:
-                print(e)
-
-        return created_count
-
-    def follow(self, user):
-        self.following.add(user)
-
-    def unfollow(self, user):
-        self.following.remove(user)
-
-    @property
-    def followers(self):
-        # 자신을 following 하는 모든 목록을 리턴
-        return self.follower_set.all()
-
-    def change_nickname(self, new_nickname):
-        self.nickname = new_nickname
-        self.save()
-
-    # shell에서 u1 = MyUser.objects.get(id=1)을 일일이 작업하는 게 귀찮으니...
-    @staticmethod
-    def assign_global_variables():
-        # interpreter를 다루는 부분
-        # sys모듈은 python 인터프리터 관련 내장 모듈
-        import sys
-
-        # __main__ 모듈을 module변수에 할당
-        # shell에서 입력한 global 변수와 같은 역할
-        module = sys.modules['__main__']
-        # MyUser 객체 중 'User'로 시작하는 객체들만 조회하여 users변수에 할당
-        users = MyUser.objects.filter(username__startswith='User')
-        # users를 순회하며
-        for index, user in enumerate(users):
-            # __main__ 모듈에 'u1,u2,u3 ...." 이름으로 각 MyUser객체를 할당
-            setattr(module, 'u{}'.format(index + 1), user)
+    USERNAME_FIELD = 'username'
+    objects = MyUserManager()
 
 
+    def get_full_name(self):
+        return '{} {}'.format(
+            self.nickname,
+            self.username
+        )
+
+    def get_short_name(self):
+        return self.nickname
