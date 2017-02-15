@@ -11,10 +11,10 @@
 
 <div>
    <p>Comment</p>
-    {% if post.comment_set.all %}
+    {% if post_detail.comment_set.all %}
         <ul>
-        {% for comment in post.comment_set.all %}
-            <li>{{ comment.author.username }}</li>
+        {% for comment in post_detail.comment_set.all %}
+            <li>{{ comment.author.username }} : {{ comment.content }}</li>
         {% endfor %}
         </ul>
     {% else %}
@@ -22,7 +22,7 @@
     {% endif %}
 
     <!--Comment Form-->
-    <form action="" method="POST">{% csrf_token %}
+    <form action="{% url 'post:comment_add' post_id=post_detail.id %}" method="POST">{% csrf_token %}
         <input type="text" name="content">
         <button type="submit">Write Comment</button>
     </form>
