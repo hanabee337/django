@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^member/', include('member.urls')),
 
     url(r'', include('post.urls')),
+
 ] + static(settings.MEDIA_URL,
              document_root=settings.MEDIA_ROOT
     )

@@ -21,3 +21,21 @@ def post_list(request):
         'post_list': post
     }
     return render(request, 'post/post_list.html', context)
+
+"""
+Post detail(하나의 Post에 대한 상세화면)
+1. View애  post_detail 함수 작성
+2. 위의 2~4와 같음.
+5. 'post/<숫자>/'로 접속했을 때, post_detail view에
+    연결되도록 post/urls.py에 내용 작성
+6. url인자로 전달받은 post_id에 해당하는 Post 객체를
+    context에 넘겨 post_detail화면을 구성
+"""
+def post_detail(request, post_id):
+
+    post = Post.objects.get(id=post_id)
+    context = {
+        'post_detail': post
+    }
+    return render(request, 'post/post_detail.html', context)
+
