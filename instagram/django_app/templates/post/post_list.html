@@ -13,8 +13,12 @@
 {% if post_list %}
     {% for post in post_list %}
         {{ post.id }} | {{ post.author }}<br>
-        {{ post.content | linebreaksbr }}
+        {{ post.content | linebreaksbr }}<br>
         {{ post.created_date }}<br>
+        <!--<img src="{{ MEDIA_URL }} / {{ post.photo }}"><br>-->
+        <!--setting.py에서 '/media/'로 설정했기에 '/'가 필요없어짐-->
+        <img src="{{ MEDIA_URL }}{{ post.photo }}"><br>
+    <hr>
     {% endfor %}
 {% else %}
     <p>No Post List</p>
