@@ -1,27 +1,29 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+{% block content %}
 <h1>Instagram</h1>
 
 {% if post_list %}
     {% for post in post_list %}
         {{ post.id }} | {{ post.author }}<br>
-        {{ post.content | linebreaksbr }}<br>
+        {{ post.content | linebreaksbr | truncatechars:100}}<br>
         {{ post.created_date }}<br>
         <!--<img src="{{ MEDIA_URL }} / {{ post.photo }}"><br>-->
         <!--setting.py에서 '/media/'로 설정했기에 '/'가 필요없어짐-->
         <img src="{{ MEDIA_URL }}{{ post.photo }}"><br>
-    <hr>
+        <hr>
+
+        {% if post.comment_set %}
+            {% for comment in post.comment_set.all %}
+                {{ comment.content }}
+                {{ comment.created_date }}
+            {% endfor %}
+        {% else %}
+            <p>No Comment</p>
+        {% endif %}
     {% endfor %}
 {% else %}
     <p>No Post List</p>
 {% endif %}
-</body>
-</html>
+
+{# 각 post에 연결된 Comment object list를 출력 #}
+
+{% endblock %}
