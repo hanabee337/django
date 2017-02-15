@@ -8,13 +8,13 @@
     <title>Document</title>
 </head>
 <body>
-<h1>instram </h1>
+<h1>Instagram</h1>
 
 {% if post_list %}
     {% for post in post_list %}
-        {{ post.author }}
-        {{ post.content }}
-        {{ post.created_date }}
+        {{ post.id }} | {{ post.author }}<br>
+        {{ post.content | linebreaksbr }}
+        {{ post.created_date }}<br>
     {% endfor %}
 {% else %}
     <p>No Post List</p>
