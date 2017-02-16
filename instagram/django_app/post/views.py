@@ -57,7 +57,7 @@ def comment_add(request, post_id):
         user = request.user
         post = Post.objects.get(id=post_id)
 
-        comment = Comment.objects.create(
+        Comment.objects.create(
             author=user,
             post=post,
             content=content

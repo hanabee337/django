@@ -47,7 +47,7 @@ class Post(models.Model):
         # self 자체가 Post가 들어가니까, self의 comment_set에서 만들기 때문에
         # Post는 안넣어도 된다.
         return self.comment_set.create(
-            user=user,
+            author=user,
             content=content
         )
 
