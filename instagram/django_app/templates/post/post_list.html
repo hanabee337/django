@@ -3,62 +3,78 @@
 {% block content %}
 
 <div class="post-list-container">
-  {% for post in post_list %}
-  <article class="post">
+    {% for post in post_list %}
+    <article class="post">
 
-    <header class="post-header">
-      <span class="header-username">{{ post.author.username }}</span>
-      <span class="header-date">{{ post.created_date }}</span>
-    </header>
+        <header class="post-header">
+            <span class="header-username">{{ post.author.username }}</span>
+            <span class="header-date">{{ post.created_date }}</span>
+        </header>
 
-    <div class="post-image-container">
-      <img src="{{ MEDIA_URL}}{{ post.photo}}" alt="" class="post-image">
-    </div>
+        <div class="post-image-container">
+            <a href="{% url 'post:post_detail' post_id=post.id %}"><img src="{{ MEDIA_URL}}{{ post.photo}}" alt=""
+                                                                        class="post-image"></a>
+        </div>
 
-    <div class="post-bottom-container">
-      <div class="post-content">{{ post.content|linebreaksbr|truncatechars:100 }}</div>
-      <div class="post-like-users">
-        {% if post.like_users.all %}
-          {% for user in post.like_users.all %}
-            <strong>{{ user.username }}</strong>
-            {% if not forloop.last %}<strong>, </strong>{% endif %}
-          {% endfor %}
-          님이 좋아합니다.
-        {% endif %}
-      </div>
-
-      <div class="post-comments">
-        {% if post.comment_set.all %}
-          {% for comment in post.comment_set.all %}
-            <div class="post-comment">
-              <span class="comment-author">{{ comment.author.username }}</span>
-              <span class="comment-content">{{ comment.content }}</span>
+        <div class="post-bottom-container">
+            <div class="post-content">{{ post.content|linebreaksbr|truncatechars:100 }}</div>
+            <div class="post-like-users">
+                {% if post.like_users.all %}
+                {% for user in post.like_users.all %}
+                <strong>{{ user.username }}</strong>
+                {% if not forloop.last %}<strong>, </strong>{% endif %}
+                {% endfor %}
+                님이 좋아합니다.
+                {{ post.like_users.count }}명이 좋아합니다.
+                {% endif %}
             </div>
-          {% endfor %}
-        {% endif %}
-      </div>
 
-      <div class="post-comment-form-container clearfix">
-          <form action="{% url 'post:like_toggle' post_id=post.id %}" method="POST" class="form-like">{% csrf_token %}
-              <button type="submit" class="btn-like
-              {% if user in post.like_users.all %}
-                sprite-heart-full
-              {% else %}
-                sprite-heart-empty
-              {% endif %}">
-              </button>
-          </form>
+            <div class="post-comments">
+                {% if post.comment_set.all %}
+                {% for comment in post.comment_set.all %}
+                <div class="post-comment">
+                    <span class="comment-author">{{ comment.author.username }}</span>
+                    <span class="comment-content">{{ comment.content }}</span>
+                    {% if comment.author.username == user.username %}
+                    <form action="{% url 'post:comment_delete' post_id=post.id comment_id=comment.id %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit">Delete</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
 
-          <form action="{% url 'post:comment_add' post_id=post.id %}" method="POST" class="form-comment">{% csrf_token %}
-            <input type="text" placeholder="댓글 달기..." class="input-comment" name="content">
-          </form>
-      </div>
+            <div class="post-comment-form-container clearfix">
+                <form action="{% url 'post:like_toggle' post_id=post.id %}" method="POST" class="form-like">{%
+                    csrf_token %}
+                    <button type="submit" class="btn-like
+                        {% if user in post.like_users.all %}
+                            sprite-heart-full
+                        {% else %}
+                            sprite-heart-empty
+                        {% endif %}">
+                    </button>
+                </form>
 
-    </div>
-  </article>
-  {% endfor %}
+                <form action="{% url 'post:comment_add' post_id=post.id %}" method="POST" class="form-comment">
+                    {%csrf_token %}
+                    <input type="text" placeholder="댓글 달기..." class="input-comment" name="content">
+                </form>
 
-  <a href="{% url 'post:post_add' %}" class="btn-add-post">+Add Post</a>
+                {% if post.author.username == user.username %}
+                <form action="{% url 'post:post_delete' post_id=post.id %}" method="POST" class="">{% csrf_token %}
+                    <button type="submit">Post Delete</button>
+                </form>
+                {% endif %}
+            </div>
+
+        </div>
+    </article>
+    {% endfor %}
+
+    <a href="{% url 'post:post_add' %}" class="btn-add-post">+Add Post</a>
 
 </div>
 

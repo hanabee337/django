@@ -6,36 +6,37 @@
 <div>{{ post_detail.created_date }}</div>
 {{ post_detail.content }}
 <div>
-  <img src="{{ MEDIA_URL }}{{ post_detail.photo }}">
-  <p>{{ post_detail.content | linebreaks }}</p>
+    <img src="{{ MEDIA_URL }}{{ post_detail.photo }}">
+    <p>{{ post_detail.content | linebreaks }}</p>
 </div>
 <hr>
 
 <div>
     <p>Comment</p>
     {% if post_detail.comment_set.all %}
-        <ul>
+    <ul>
         {% for comment in post_detail.comment_set.all %}
-            <li>
-                <span>{{ comment.author.username }} : {{ comment.content }}</span>
-                <form action="{% url 'post:comment_delete' post_id=post_detail.id comment_id=comment.id %}" method="POST">{% csrf_token %}
-                    <button type="submit">Delete</button>
-                </form>
-            </li>
+        <li>
+            <span>{{ comment.author.username }} : {{ comment.content }}</span>
+            <form action="{% url 'post:comment_delete' post_id=post_detail.id comment_id=comment.id %}" method="POST">{%
+                csrf_token %}
+                <button type="submit">Delete</button>
+            </form>
+        </li>
         {% endfor %}
-        </ul>
+    </ul>
     {% else %}
-        <p>No Comment</p>
+    <p>No Comment</p>
     {% endif %}
 
     <hr>
     <p>Like Users</p>
     {% if post_detail.like_users.all %}
-        <ul>
-          {% for user in post_detail.like_users.all %}
-              <li>{{ user.username }}</li>
-          {% endfor %}
-        </ul>
+    <ul>
+        {% for user in post_detail.like_users.all %}
+        <li>{{ user.username }}</li>
+        {% endfor %}
+    </ul>
     {% endif %}
 
 
@@ -50,9 +51,9 @@
     <form action="{% url 'post:like_toggle' post_id=post_detail.id %}" method="POST">{% csrf_token %}
         <button type="submit">
             {% if user in post_detail.like_users.all %}
-                Unlike
+            Unlike
             {% else %}
-                Like
+            Like
             {% endif %}
         </button>
     </form>

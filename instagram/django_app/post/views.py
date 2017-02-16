@@ -81,6 +81,15 @@ def post_add(request):
     return render(request, 'post/post_add.html', context)
 
 
+def post_delete(request, post_id):
+    print('post_delete')
+
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        post.delete()
+        return redirect('post:post_list')
+
+
 def comment_add(request, post_id):
     print('comment_add')
 

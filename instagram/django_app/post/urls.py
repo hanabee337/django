@@ -16,4 +16,6 @@ urlpatterns = [
 
     url(r'^post/add/$', views.post_add, name='post_add'),
 
+    url(r'^post/(?P<post_id>[0-9]+)/delete/$', views.post_delete, name='post_delete'),
+
 ]
