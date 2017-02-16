@@ -64,7 +64,7 @@ class Post(models.Model):
         # PostLike 중간자 모델에서 인자로 전달된 Post,Myuser 객체를 가진 row를 조회
         # pl_list = Post.objects.filter(post=self, user=user)
         # 윗줄 보다 아랫줄이 더 직관적
-        pl_list = self.postlike_user_set.filter(user=user)
+        pl_list = self.postlike_set.filter(user=user)
 
         # 1. 현재 인자로 전달된 user가 해당 Post(self)를 좋아요 한 적이 있는지
         # if pl_list.exist():

@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from .forms import CommentForm
+from .forms import CommentForm, LikeForm
 from .models import Post
 
 """
@@ -45,10 +45,12 @@ def post_detail(request, post_id):
     post = Post.objects.get(id=post_id)
 
     comment_form = CommentForm()
+    # like_form = LikeForm()
 
     context = {
         'post_detail': post,
         'comment_form': comment_form,
+        # 'like_form': like_form,
     }
     return render(request, 'post/post_detail.html', context)
 
@@ -80,4 +82,23 @@ def comment_add(request, post_id):
         print('NO POST')
 
 
+def post_like_toggle(request, post_id):
+    """
+    1. post_detail.html에 form을 하나 더 생성
+    2. 요청 view(url)가 post_like가 되도록 함
+    3. 요청을 받은 후, 적절히 PostLike 처리
+    4. redirect
+    """
+    print('post_like')
 
+    if request.method == 'POST':
+        post = Post.objects.get(id=post_id)
+        post.toggle_like(user=request.user)
+        return redirect('post:post_detail', post_id=post_id)
+
+
+
+# def comment_delete(request, post_id):
+#     """
+#     1. Post_detail.html
+#     """

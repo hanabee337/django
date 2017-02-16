@@ -21,10 +21,33 @@
         <p>No Comment</p>
     {% endif %}
 
+    <hr>
+    <p>Like Users</p>
+    {% if post_detail.like_users.all %}
+        <ul>
+        {% for user in post_detail.like_users.all %}
+            <li>{{ user.username }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+
     <!--Comment Form-->
     <form action="{% url 'post:comment_add' post_id=post_detail.id %}" method="POST">{% csrf_token %}
         {{ comment_form.content }}
         <button type="submit">Write Comment</button>
+    </form>
+
+
+    <!--Post_like Form-->
+    <form action="{% url 'post:like_toggle' post_id=post_detail.id %}" method="POST">{% csrf_token %}
+        <button type="submit">
+            {% if user in post_detail.like_users.all %}
+                Unlike
+            {% else %}
+                Like
+            {% endif %}
+        </button>
     </form>
 
 </div>
