@@ -14,4 +14,6 @@ urlpatterns = [
 
     url(r'^post/(?P<post_id>[0-9]+)/comment/(?P<comment_id>[0-9]+)/delete/$', views.comment_delete, name='comment_delete'),
 
+    url(r'^post/add/$', views.post_add, name='post_add'),
+
 ]

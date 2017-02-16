@@ -96,6 +96,8 @@ class Post(models.Model):
         return PostLike.objects.create(post=self, user=user) \
             if not pl_list.exists() else pl_list.delete()
 
+    class Meta:
+        ordering = ('-id', )
 
 class PostLike(models.Model):
     user = models.ForeignKey(MyUser)

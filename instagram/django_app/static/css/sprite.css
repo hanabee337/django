@@ -1,0 +1,27 @@
+.sprite-logo, .sprite-explore, .sprite-activity, .sprite-profile, .sprite-heart-empty, .sprite-heart-full {
+  background-image: url(/static/images/insta.png);
+}
+
+.sprite-logo {
+  background-position: -176px 0;
+}
+
+.sprite-explore {
+  background-position: -200px -254px;
+}
+
+.sprite-activity {
+  background-position: -225px -254px;
+}
+
+.sprite-profile {
+  background-position: -150px -254px;
+}
+
+.sprite-heart-empty {
+  background-position: -280px -180px;
+}
+
+.sprite-heart-full {
+  background-position: -256px -180px;
+}

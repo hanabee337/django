@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 
-from .forms import CommentForm, LikeForm
+from .forms import CommentForm, PostForm
 from .models import Post, Comment
 
 """
@@ -55,6 +55,32 @@ def post_detail(request, post_id):
     return render(request, 'post/post_detail.html', context)
 
 
+def post_add(request):
+    """
+    1. template : post_add.html
+    2. view : def post_add
+    3. url : /post/add/
+    4. form : post.form.PostForm
+    """
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = Post(
+                author=request.user,
+                contenet=form.cleaned_data['content'],
+                photo=form.cleaned_data['photo'],
+            )
+            post.save()
+            return redirect('post:post_list')
+    else:
+        form = PostForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'post/post_add.html', context)
+
+
 def comment_add(request, post_id):
     print('comment_add')
 
@@ -76,7 +102,8 @@ def comment_add(request, post_id):
             #     post=post,
             #     content=content
             # )
-        return redirect('post:post_detail', post_id=post_id)
+        # 다시 해당하는 post_detail로 redirect
+        return redirect('post:post_list')
 
     else:
         print('NO POST')
@@ -94,8 +121,7 @@ def post_like_toggle(request, post_id):
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
         post.toggle_like(user=request.user)
-        return redirect('post:post_detail', post_id=post_id)
-
+        return redirect('post:post_list')
 
 
 def comment_delete(request, post_id, comment_id):

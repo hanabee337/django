@@ -5,19 +5,21 @@
 
 <div>{{ post_detail.created_date }}</div>
 {{ post_detail.content }}
-<img src="{{ MEDIA_URL }}{{ post_detail.photo }}">
-<p>{{ post_detail.content | linebreaks }}</p>
-
+<div>
+  <img src="{{ MEDIA_URL }}{{ post_detail.photo }}">
+  <p>{{ post_detail.content | linebreaks }}</p>
+</div>
+<hr>
 
 <div>
-   <p>Comment</p>
+    <p>Comment</p>
     {% if post_detail.comment_set.all %}
         <ul>
         {% for comment in post_detail.comment_set.all %}
             <li>
                 <span>{{ comment.author.username }} : {{ comment.content }}</span>
                 <form action="{% url 'post:comment_delete' post_id=post_detail.id comment_id=comment.id %}" method="POST">{% csrf_token %}
-                    <button type="submit">Comment Delete</button>
+                    <button type="submit">Delete</button>
                 </form>
             </li>
         {% endfor %}
@@ -30,9 +32,9 @@
     <p>Like Users</p>
     {% if post_detail.like_users.all %}
         <ul>
-        {% for user in post_detail.like_users.all %}
-            <li>{{ user.username }}</li>
-        {% endfor %}
+          {% for user in post_detail.like_users.all %}
+              <li>{{ user.username }}</li>
+          {% endfor %}
         </ul>
     {% endif %}
 

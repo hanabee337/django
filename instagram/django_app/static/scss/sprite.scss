@@ -1,0 +1,35 @@
+@import "variables";
+
+%sprite-image {
+  background-image: url(/static/images/insta.png);
+}
+
+.sprite-logo {
+  @extend %sprite-image;
+  background-position: -176px 0;
+}
+
+.sprite-explore {
+  @extend %sprite-image;
+  background-position: -200px -254px;
+}
+
+.sprite-activity {
+  @extend %sprite-image;
+  background-position: -225px -254px;
+}
+
+.sprite-profile {
+  @extend %sprite-image;
+  background-position: -150px -254px;
+}
+
+.sprite-heart-empty {
+  @extend %sprite-image;
+  background-position: -280px -180px;
+}
+
+.sprite-heart-full {
+  @extend %sprite-image;
+  background-position: -256px -180px;
+}
