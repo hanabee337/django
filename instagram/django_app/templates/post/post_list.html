@@ -10,7 +10,7 @@
         {{ post.created_date }}<br>
         <!--<img src="{{ MEDIA_URL }} / {{ post.photo }}"><br>-->
         <!--setting.py에서 '/media/'로 설정했기에 '/'가 필요없어짐-->
-        <img src="{{ MEDIA_URL }}{{ post.photo }}"><br>
+        <a href="{% url 'post:post_detail' post_id=post.id %}"><img src="{{ MEDIA_URL }}{{ post.photo }}"></a><br>
         <hr>
 
         {% if post.comment_set %}
