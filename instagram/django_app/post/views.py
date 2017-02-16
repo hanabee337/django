@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 
 from .forms import CommentForm, LikeForm
-from .models import Post
+from .models import Post, Comment
 
 """
 Post List를 보여주는 화면을 구성
@@ -105,7 +105,7 @@ def comment_delete(request, post_id, comment_id):
     3. 요청을 받은 후, 적절히 삭제 처리
     4. redirect
     """
-    # if request.method == 'POST':
-    #     post = Post.objects.get(id=comment_id)
-    #     post.delete_comment(user=request.user)
-    #     return redirect('post:post_detail', post_id=comment_id)
+    if request.method == 'POST':
+        comment = Comment.objects.get(id=comment_id)
+        comment.delete()
+        return redirect('post:post_detail', post_id=post_id)
