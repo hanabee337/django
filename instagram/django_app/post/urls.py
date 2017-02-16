@@ -12,4 +12,6 @@ urlpatterns = [
 
     url(r'^post/(?P<post_id>[0-9]+)/like/toggle/$', views.post_like_toggle, name='like_toggle'),
 
+    url(r'^post/(?P<post_id>[0-9]+)/comment/(?P<comment_id>[0-9]+)/$', views.comment_delete, name='comment_delete'),
+
 ]

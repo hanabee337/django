@@ -98,7 +98,14 @@ def post_like_toggle(request, post_id):
 
 
 
-# def comment_delete(request, post_id):
-#     """
-#     1. Post_detail.html
-#     """
+def comment_delete(request, post_id, comment_id):
+    """
+    1. Post_detail.html의 Comment 표현 loop내부에 form을 생성
+    2. 요청 view(url)가 comment_delete가 되도록 함.
+    3. 요청을 받은 후, 적절히 삭제 처리
+    4. redirect
+    """
+    # if request.method == 'POST':
+    #     post = Post.objects.get(id=comment_id)
+    #     post.delete_comment(user=request.user)
+    #     return redirect('post:post_detail', post_id=comment_id)

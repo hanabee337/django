@@ -14,7 +14,12 @@
     {% if post_detail.comment_set.all %}
         <ul>
         {% for comment in post_detail.comment_set.all %}
-            <li>{{ comment.author.username }} : {{ comment.content }}</li>
+            <li>
+                <span>{{ comment.author.username }} : {{ comment.content }}</span>
+                <form action="{% url 'post:comment_delete' post_id=post_detail.id comment_id=comment.id %}" method="POST">{% csrf_token %}
+                    <button type="submit">Comment Delete</button>
+                </form>
+            </li>
         {% endfor %}
         </ul>
     {% else %}

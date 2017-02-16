@@ -35,7 +35,7 @@ class Post(models.Model):
     def add_comment(self, user, content):
         # 자신에게 연결된 comment객체의 역참조 매니저(comment_set)로부터
         # create 메서드를 이용해 Comment 객체를 생성
-        # Comment.objectes.create(
+        # Comment.objects.create(
         #     post=self,
         #     user = user,
         #     content=content
@@ -50,6 +50,9 @@ class Post(models.Model):
             author=user,
             content=content
         )
+
+    def delete_comment(self, user):
+        return self.comment_set.delete()
 
     @property
     def like_count(self):
@@ -70,26 +73,26 @@ class Post(models.Model):
         # if pl_list.exist():
         # if self.like_users.filter(id=user.id).exists():
         # 2. 만약 이미 좋아요를 했을 경우 해당 내역을 삭제
-            # 중간자 모델을 사용했으므로 self.like_users.remove(user)로 직접 삭제 불가
-            # 그래서, 아래 메서드를 사용함.
-            # self.like_users.remove(user)
-            # PostLike.objects.filter(post=self, user=user)
-            # pl_list.delete()
+        # 중간자 모델을 사용했으므로 self.like_users.remove(user)로 직접 삭제 불가
+        # 그래서, 아래 메서드를 사용함.
+        # self.like_users.remove(user)
+        # PostLike.objects.filter(post=self, user=user)
+        # pl_list.delete()
         # 3. 아직 내영기 없을 경우, 생성해 준다.
         # else :
-            # 중간자 모델을 사용했으므로 self.like_users.create(user)로 직접 생성 불가,
-            # 대신에 PostLike 중간자 모델 매니저를 사용한다.
-            # self.like_users.create(user)
-            # PostLike.objects.create(post=self, user=user)
+        # 중간자 모델을 사용했으므로 self.like_users.create(user)로 직접 생성 불가,
+        # 대신에 PostLike 중간자 모델 매니저를 사용한다.
+        # self.like_users.create(user)
+        # PostLike.objects.create(post=self, user=user)
 
 
         # if pl_list.exist():
-            # pl_list.delete()
+        # pl_list.delete()
         # else :
-            # PostLike.objects.create(post=self, user=user)
+        # PostLike.objects.create(post=self, user=user)
         # 위의 조건문을 한 줄로 줄이면
         # 파이썬 삼항연산자
-         # [True일 경우 실행할 구문] if 조건문 else [False일 경우 실행할 구문]
+        # [True일 경우 실행할 구문] if 조건문 else [False일 경우 실행할 구문]
         return PostLike.objects.create(post=self, user=user) \
             if not pl_list.exists() else pl_list.delete()
 
