@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 
-from .models import Post, Comment
+from .forms import CommentForm
+from .models import Post
 
 """
 Post List를 보여주는 화면을 구성
@@ -42,8 +43,12 @@ post Detail 댓글작성기능 추가
 
 def post_detail(request, post_id):
     post = Post.objects.get(id=post_id)
+
+    comment_form = CommentForm()
+
     context = {
-        'post_detail': post
+        'post_detail': post,
+        'comment_form': comment_form,
     }
     return render(request, 'post/post_detail.html', context)
 
@@ -52,16 +57,27 @@ def comment_add(request, post_id):
     print('comment_add')
 
     if request.method == 'POST':
-        print('POST')
-        content = request.POST['content']
-        user = request.user
-        post = Post.objects.get(id=post_id)
 
-        Comment.objects.create(
-            author=user,
-            post=post,
-            content=content
-        )
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            print('POST')
+            content = form.cleaned_data['content']
+            # HttpRequest에는 항상 User정보가 전달된다.
+            user = request.user
+            # url 인자로 전달된 post_id 값을 사용
+            post = Post.objects.get(id=post_id)
+
+            # post의 메서드를 사용해서 Comment객체 생성
+            post.add_comment(user, content)
+            # Comment.objects.create(
+            #     author=user,
+            #     post=post,
+            #     content=content
+            # )
         return redirect('post:post_detail', post_id=post_id)
+
     else:
         print('NO POST')
+
+
+
