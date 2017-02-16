@@ -18,8 +18,7 @@
         {% for comment in post_detail.comment_set.all %}
         <li>
             <span>{{ comment.author.username }} : {{ comment.content }}</span>
-            <form action="{% url 'post:comment_delete' post_id=post_detail.id comment_id=comment.id %}" method="POST">{%
-                csrf_token %}
+            <form action="{% url 'post:comment_delete' post_id=post_detail.id comment_id=comment.id %}" method="POST">{% csrf_token %}
                 <button type="submit">Delete</button>
             </form>
         </li>
