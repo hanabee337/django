@@ -48,4 +48,5 @@ def comment_delete(request, post_id, comment_id):
         comment = Comment.objects.get(id=comment_id)
         if comment.author.id == request.user.id:
             comment.delete()
-        return redirect('post:post_list', post_id=post_id)
+        return redirect('post:post_detail', post_id=post_id)
+        # return redirect('post:post_list', post_id=post_id)

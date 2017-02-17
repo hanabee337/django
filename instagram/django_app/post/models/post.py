@@ -4,11 +4,8 @@
 # 3. Post모델의 like_users 필드 구현
 # 4. Comments 모델 구현
 
+from django.conf import settings
 from django.db import models
-
-from member.models import MyUser
-
-from django.conf    import settings
 
 __all__ = (
     'Post',
@@ -16,8 +13,27 @@ __all__ = (
 )
 
 
+# 방법 1 :
+class PostManager(models.Model):
+    """
+    - is_visible과 같은 경우들을 범용적으로 여기서 미리 정의하고자 PostManager가 처리
+    - Managet에 있다. Custom Manager
+    """
+
+    def visible(self):
+        return super().get_queryset().filter(is_visible=True)
+
+
+# 방법 2 : get_queryset override해서
+class PostUserVisibleManager(models.Model):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_visible=True)
+
+
 class Post(models.Model):
-    author = models.ForeignKey(MyUser)
+    # author = models.ForeignKey(MyUser)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL)
+
     photo = models.ImageField(
         upload_to='post', blank=True
     )
@@ -28,13 +44,19 @@ class Post(models.Model):
     # post가 user쪽에 영향을 행사하는게 아니고,
     # user가 post쪽에 영향을 주니까, 여기에서 설정
     like_users = models.ManyToManyField(
-        MyUser,
+        settings.AUTH_USER_MODEL,
         blank=True,
         through='PostLike',
         # 역참조는 언제쓰나? user에서 post로 갈 때,
         # 내가 like를 했던 post의 set을 가져오고 싶다할 때, 역참조 가능하다.
         related_name='like_post_set',
     )
+    is_visible = models.BooleanField(default=True)
+
+    # Default 모델 매니저 교체
+    object = PostManager()
+    # 커스텀 모델 매니저 추가
+    visible = PostUserVisibleManager()
 
     def __str__(self):
         return 'Post{}'.format(self.id)
@@ -108,7 +130,7 @@ class Post(models.Model):
 
 
 class PostLike(models.Model):
-    user = models.ForeignKey(MyUser)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     post = models.ForeignKey(Post)
     created_date = models.DateTimeField(auto_now_add=True)
 

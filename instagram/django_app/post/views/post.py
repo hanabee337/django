@@ -25,7 +25,8 @@ Post List를 보여주는 화면을 구성
 
 def post_list(request):
     # return HttpResponse('post_list view')
-    post = Post.objects.all()
+    # post = Post.objects.all()
+    post = Post.objects.filter(is_visible=True)
     context = {
         'post_list': post
     }
@@ -89,13 +90,18 @@ def post_add(request):
     return render(request, 'post/post_add.html', context)
 
 
-def post_delete(request, post_id):
+def post_delete(request, post_id, db_delete=False):
     print('post_delete')
 
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
         if post.author.id == request.id:
-            post.delete()
+            if db_delete:
+                post.delete()
+            else:
+                post.is_visible = False
+                post.save()
+
         return redirect('post:post_list')
 
 
