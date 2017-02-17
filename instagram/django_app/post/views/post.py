@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
 
-from instagram.django_app.post.forms import CommentForm, PostForm
-from instagram.django_app.post.models import Post
+from post.forms import CommentForm, PostForm
+from post.models import Post
 
 __all__ = (
-    'pst_list',
+    'post_list',
     'post_detail',
     'post_like_toggle',
     'post_add',
-    'pst_delete',
+    'post_delete',
 )
 
 """
@@ -94,7 +94,8 @@ def post_delete(request, post_id):
 
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
-        post.delete()
+        if post.author.id == request.id:
+            post.delete()
         return redirect('post:post_list')
 
 

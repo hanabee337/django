@@ -8,6 +8,13 @@ from django.db import models
 
 from member.models import MyUser
 
+from django.conf    import settings
+
+__all__ = (
+    'Post',
+    'PostLike',
+)
+
 
 class Post(models.Model):
     author = models.ForeignKey(MyUser)
@@ -97,7 +104,8 @@ class Post(models.Model):
             if not pl_list.exists() else pl_list.delete()
 
     class Meta:
-        ordering = ('-id', )
+        ordering = ('-id',)
+
 
 class PostLike(models.Model):
     user = models.ForeignKey(MyUser)
@@ -118,18 +126,4 @@ class PostLike(models.Model):
     class Meta:
         unique_together = (
             ('user', 'post')
-        )
-
-
-class Comment(models.Model):
-    author = models.ForeignKey(MyUser)
-    post = models.ForeignKey(Post)
-    content = models.TextField()
-    created_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return 'Post[{}]\'s Comment[{}], Author[{}]'.format(
-            self.post_id,
-            self.id,
-            self.author_id,
         )

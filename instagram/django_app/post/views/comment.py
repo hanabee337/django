@@ -1,7 +1,7 @@
 from django.shortcuts import redirect
 
-from .post.forms import CommentForm
-from .post.models import Post, Comment
+from post.forms import CommentForm
+from post.models import Post, Comment
 
 __all__ = (
     'comment_add',
@@ -46,5 +46,6 @@ def comment_delete(request, post_id, comment_id):
     """
     if request.method == 'POST':
         comment = Comment.objects.get(id=comment_id)
-        comment.delete()
-        return redirect('post:post_detail', post_id=post_id)
+        if comment.author.id == request.user.id:
+            comment.delete()
+        return redirect('post:post_list', post_id=post_id)

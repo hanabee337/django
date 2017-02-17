@@ -61,10 +61,10 @@
                     <input type="text" placeholder="댓글 달기..." class="input-comment" name="content">
                 </form>
 
-                {% if post.author.username == user.username %}
-                <form action="{% url 'post:post_delete' post_id=post.id %}" method="POST" class="">{% csrf_token %}
-                    <button type="submit">Post Delete</button>
-                </form>
+                {% if post.author == user %}
+                    <form action="{% url 'post:post_delete' post_id=post.id %}" method="POST" class="">{% csrf_token %}
+                        <button type="submit">Post Delete</button>
+                    </form>
                 {% endif %}
             </div>
 
