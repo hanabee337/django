@@ -65,3 +65,11 @@ def login_cf(request):
         'forms': form,
     }
     return render(request, 'member/login.html', context)
+
+
+def signup_fbv(request):
+    """
+
+    :param request:
+    :return:
+    """

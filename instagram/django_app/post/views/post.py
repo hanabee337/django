@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 
 from post.forms import CommentForm, PostForm
-from post.models import Comment
 from post.models import Post
 
 __all__ = (
@@ -66,6 +65,22 @@ def post_detail(request, post_id):
 
 
 def post_add(request):
+    print('post_add')
+
+    def create_post_comment(file, comment_content):
+        post = Post(
+            author=request.user,
+            photo=file,
+        )
+        post.save()
+
+        if comment_content != '':
+            post.add_comment(user=request.user, content=comment_content)
+            # post.comment_set.create(
+            #     author=request.user,
+            #     content=comment_content
+            # )
+
     """
     1. template : post_add.html
     2. view : def post_add
@@ -74,25 +89,18 @@ def post_add(request):
     """
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
+        print('post_add method:POST')
         if form.is_valid():
-            post = Post(
-                author=request.user,
-                photo=form.cleaned_data['photo'],
-            )
-            post.save()
+            comment_content = form.cleaned_data.get('content','').strip(),
+            files = request.FILES.getlist('photo')
 
+            for file in files:
+                create_post_comment(file, comment_content)
             """
             2017.02.17
             1. Post 모델에서 content 필드를 없애고 Db migration
             2. post_add view의 동작을 변경 : 입력받은 content는 새 comment 객체를 생성하도록)
             """
-            comment_content = form.cleaned_data['content'],
-            if not comment_content.strip() == '':
-                post.add_comment(user=request.user, content=comment_content)
-                # post.comment_set.create(
-                #     author=request.user,
-                #     content=comment_content
-                # )
 
             return redirect('post:post_list')
     else:
