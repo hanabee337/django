@@ -29,7 +29,7 @@ urlpatterns = [
     # it conflicts with views.serve, it is disabled.
     # url(r'^$', views.index, name='index'),
 
-] + static(settings.MEDIA_URL, ocument_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += [
