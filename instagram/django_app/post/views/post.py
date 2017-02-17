@@ -117,7 +117,7 @@ def post_delete(request, post_id, db_delete=False):
 
     if request.method == 'POST':
         post = Post.objects.get(id=post_id)
-        if post.author.id == request.id:
+        if post.author.id == request.user.id:
             if db_delete:
                 post.delete()
             else:
