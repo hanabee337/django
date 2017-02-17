@@ -39,9 +39,9 @@ class MyUser(PermissionsMixin, AbstractBaseUser):
     # is_active
     # USERNAME이라는 field를 만들고 , USERANME_FIELD에 추가한 후, makemigrations 해보기
     username = models.CharField(max_length=30, unique=True)
-    nickname = models.CharField(max_length=20)
-    email = models.EmailField(blank=True)
-    gender = models.CharField(max_length=1, choices=CHOICES_GENDER)
+    nickname = models.CharField(max_length=20, default='', blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    gender = models.CharField(max_length=1, choices=CHOICES_GENDER, blank=True, null=True)
 
     is_staff = models.BooleanField(default=False)
 
