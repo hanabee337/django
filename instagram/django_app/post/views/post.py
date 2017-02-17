@@ -27,6 +27,7 @@ def post_list(request):
     # return HttpResponse('post_list view')
     # post = Post.objects.all()
     post = Post.objects.filter(is_visible=True)
+    # post = Post.visible.all()
     context = {
         'post_list': post
     }
@@ -51,8 +52,9 @@ post Detail 댓글작성기능 추가
 
 
 def post_detail(request, post_id):
+    # 인자로 전달된 post_id와 일치하는 id를 가진 Post객체 하나만 조회
     post = Post.objects.get(id=post_id)
-
+    # Comment를 생성할 Form객체를 생성, 할당
     comment_form = CommentForm()
     # like_form = LikeForm()
 
@@ -91,11 +93,12 @@ def post_add(request):
         form = PostForm(request.POST, request.FILES)
         print('post_add method:POST')
         if form.is_valid():
-            comment_content = form.cleaned_data.get('content','').strip(),
+            comment_content = form.cleaned_data.get('content', '').strip()
             files = request.FILES.getlist('photo')
 
             for file in files:
                 create_post_comment(file, comment_content)
+
             """
             2017.02.17
             1. Post 모델에서 content 필드를 없애고 Db migration
