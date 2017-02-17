@@ -37,9 +37,9 @@
                     <span class="comment-author">{{ comment.author.username }}</span>
                     <span class="comment-content">{{ comment.content }}</span>
                     {% if comment.author.username == user.username %}
-                    <form action="{% url 'post:comment_delete' post_id=post.id comment_id=comment.id %}" method="POST">{% csrf_token %}
-                        <button type="submit">Delete</button>
-                    </form>
+                        <form action="{% url 'post:comment_delete' post_id=post.id comment_id=comment.id %}" method="POST">{% csrf_token %}
+                            <button type="submit">Delete</button>
+                        </form>
                     {% endif %}
                 </div>
                 {% endfor %}
