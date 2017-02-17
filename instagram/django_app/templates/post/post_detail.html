@@ -1,7 +1,6 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-<h3>post_detail template</h3>
 
 <div>{{ post_detail.created_date }}</div>
 {{ post_detail.content }}
@@ -18,9 +17,11 @@
         {% for comment in post_detail.comment_set.all %}
         <li>
             <span>{{ comment.author.username }} : {{ comment.content }}</span>
-            <form action="{% url 'post:comment_delete' post_id=post_detail.id comment_id=comment.id %}" method="POST">{% csrf_token %}
-                <button type="submit">Delete</button>
-            </form>
+            {% if comment.author.id == user.id %}
+              <form action="{% url 'post:comment_delete' post_id=post_detail.id comment_id=comment.id %}" method="POST">{% csrf_token %}
+                  <button type="submit">Delete</button>
+              </form>
+            {% endif %}
         </li>
         {% endfor %}
     </ul>
