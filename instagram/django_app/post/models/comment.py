@@ -1,6 +1,6 @@
+from django.conf import settings
 from django.db import models
 
-from member.models import MyUser
 from .post import Post
 
 __all__ = (
@@ -9,7 +9,8 @@ __all__ = (
 
 
 class Comment(models.Model):
-    author = models.ForeignKey(MyUser)
+    # author = models.ForeignKey(MyUser)
+    author = models.ForeignKey(settings.AUTH_USER_MODEL)
     post = models.ForeignKey(Post)
     content = models.TextField()
     created_date = models.DateTimeField(auto_now_add=True)
