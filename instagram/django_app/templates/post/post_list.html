@@ -9,6 +9,11 @@
         <header class="post-header">
             <span class="header-username">{{ post.author.username }}</span>
             <span class="header-date">{{ post.created_date }}</span>
+            {% if post.author.id == user.id %}
+            <form action="{% url 'post:post_delete' post_id=post.id %}" method="POST" class="inline">{% csrf_token %}
+                <button type="submit" class="btn">Post Delete</button>
+            </form>
+            {% endif %}
         </header>
 
         <div class="post-image-container">
@@ -60,12 +65,6 @@
                 <form action="{% url 'post:comment_add' post_id=post.id %}" method="POST" class="form-comment">{%csrf_token %}
                     <input type="text" placeholder="댓글 달기..." class="input-comment" name="content">
                 </form>
-
-                {% if post.author.id == user.id %}
-                    <form action="{% url 'post:post_delete' post_id=post.id %}" method="POST" class="">{% csrf_token %}
-                        <button type="submit">Post Delete</button>
-                    </form>
-                {% endif %}
             </div>
 
         </div>

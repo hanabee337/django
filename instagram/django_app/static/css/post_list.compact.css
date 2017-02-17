@@ -4,6 +4,10 @@
 
 #wrap > .content-container > .post-list-container article.post header.post-header { padding: 14px 20px; font-size: 14px; }
 
+#wrap > .content-container > .post-list-container article.post header.post-header .header-username { float: left; margin-right: 5px; }
+
+#wrap > .content-container > .post-list-container article.post header.post-header .inline .btn { display: inline-block; cursor: pointer; font-size: 11px; }
+
 #wrap > .content-container > .post-list-container article.post header.post-header .header-date { color: #999; float: right; }
 
 #wrap > .content-container > .post-list-container article.post .post-image-container { font-size: 0; }
@@ -19,6 +23,10 @@
 #wrap > .content-container > .post-list-container article.post .post-bottom-container .post-comments { border-bottom: 1px solid #e6e6e6; padding-bottom: 20px; }
 
 #wrap > .content-container > .post-list-container article.post .post-bottom-container .post-comments .post-comment .comment-author { font-weight: bold; margin-right: 5px; }
+
+#wrap > .content-container > .post-list-container article.post .post-bottom-container .post-comments .post-comment form { display: inline-block; }
+
+#wrap > .content-container > .post-list-container article.post .post-bottom-container .post-comments .post-comment form button { font-size: 11px; padding: 2px 3px; cursor: pointer; }
 
 #wrap > .content-container > .post-list-container article.post .post-bottom-container .post-comment-form-container { padding-top: 20px; position: relative; }
 

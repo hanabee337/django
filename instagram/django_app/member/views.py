@@ -7,11 +7,10 @@
 5. settings.py에 TEMPLATES_DIR 변수를 할당하고 (os.path.join(BASE_DIR, 'templates'))
     TEMPLATES 설정의 DIRS에 추가
 """
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect
 
-from member.forms import LoginForm
+from member.forms import LoginForm, SignupForm
 
 
 def login_cf(request):
@@ -42,7 +41,7 @@ def login_cf(request):
             if user is not None:
                 login(request, user)
                 # return HttpResponse('Login Success')
-                return redirect('/admin')
+                return redirect('post:post_list')
             # 인증에 실패할 경우, 해당하는 username과 password에 일치하는 User개게가 존재하지 않을 경우
             else:
                 # return HttpResponse('Login Fail')
@@ -69,7 +68,40 @@ def login_cf(request):
 
 def signup_fbv(request):
     """
-
-    :param request:
-    :return:
+    회원 가입 구현
+    1. member/signup.html 파일 생성\
+    2. SignupForm 클래스 구현
+    3. 해당 Form을 사용해서 signup.html템플릿 구현
+    4. POST요청을 받아 MyUser객체 생성
+    5. 로그인 완료되면 post_list 뷰로 이동
     """
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = form.create_user()
+            login(request, user)
+            return redirect('post:post_list')
+    else:
+        form = SignupForm()
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'member/signup.html', context)
+
+
+def profile(request):
+    """
+    1. button 1개 (로그아웃)이 존재하는 member/logout.html을 render해주는 view
+    2. 메인의 우측 위 사람 모양 아이콘에 이 뷰로 오는 링크 연결
+    """
+
+    context = {
+    }
+
+    return render(request, 'member/profile.html', context)
+
+
+def logout_fbv(request):
+    logout(request)
+    return redirect('member:login')

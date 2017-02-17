@@ -41,8 +41,7 @@ class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL)
 
     photo = models.ImageField(
-        upload_to='post', blank=True
-    )
+        upload_to='post', blank=True)
     # content = models.TextField(blank=True)
     created_date = models.DateTimeField(auto_now_add=True)
 
@@ -60,7 +59,8 @@ class Post(models.Model):
     is_visible = models.BooleanField(default=True)
 
     # Default 모델 매니저 교체
-    object = PostManager()
+    objects = PostManager()
+
     # 커스텀 모델 매니저 추가
     visible = PostUserVisibleManager()
 
