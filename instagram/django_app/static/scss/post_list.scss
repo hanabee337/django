@@ -15,7 +15,15 @@
       font-size: 14px;
 
       .header-username {
-
+        float: left;
+        margin-right: 5px;
+      }
+      .inline {
+        .btn {
+          display: inline-block;
+          cursor: pointer;
+          font-size: 11px;
+        }
       }
       .header-date {
         color: #999;
@@ -46,8 +54,19 @@
             font-weight: bold;
             margin-right: 5px;
           }
+
+          form {
+            display: inline-block;
+
+            button {
+              font-size: 11px;
+              padding: 2px 3px;
+              cursor: pointer;
+            }
+          }
         }
       }
+
       .post-comment-form-container {
         padding-top: 20px;
         position: relative;
