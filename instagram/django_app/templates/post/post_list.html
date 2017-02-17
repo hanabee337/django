@@ -36,7 +36,7 @@
                 <div class="post-comment">
                     <span class="comment-author">{{ comment.author.username }}</span>
                     <span class="comment-content">{{ comment.content }}</span>
-                    {% if comment.author.username == user.username %}
+                    {% if comment.author.id == user.id %}
                         <form action="{% url 'post:comment_delete' post_id=post.id comment_id=comment.id %}" method="POST">{% csrf_token %}
                             <button type="submit">Delete</button>
                         </form>
@@ -61,7 +61,7 @@
                     <input type="text" placeholder="댓글 달기..." class="input-comment" name="content">
                 </form>
 
-                {% if post.author == user %}
+                {% if post.author.id == user.id %}
                     <form action="{% url 'post:post_delete' post_id=post.id %}" method="POST" class="">{% csrf_token %}
                         <button type="submit">Post Delete</button>
                     </form>
