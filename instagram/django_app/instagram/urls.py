@@ -17,19 +17,20 @@ from django.conf import settings
 from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.staticfiles import views
 
-# from . import views
+from . import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-    url(r'^member/', include('member.urls')),
-    url(r'^post/', include('post.urls')),
+                  url(r'^admin/', admin.site.urls),
+                  url(r'^member/', include('member.urls')),
+                  url(r'^post/', include('post.urls')),
 
-    # it conflicts with views.serve, it is disabled.
-    # url(r'^$', views.index, name='index'),
+                  # it conflicts with views.serve, it is disabled.
+                  url(r'^$', views.index, name='index'),
 
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+from django.contrib.staticfiles import views
 
 if settings.DEBUG:
     urlpatterns += [
