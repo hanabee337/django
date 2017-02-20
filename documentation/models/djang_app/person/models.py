@@ -1,3 +1,12 @@
+"""
+1. 모델을 정의
+2. 모델이 속한 app을 settings.py의 INSTALLED_APPS에 등록
+3. 등록 후 해당 app의 모델을 데이터베이스에 적용시키기위해 makemigrations -> migrate
+4. 장고 어드민에 등록시킬 모델을 admin.py에 admin.site.register(모델명)으로 등록
+5. 장고 어드민에 로그인 하기위해 ./manage.py createsuperuser로 관리자계정 생성
+6. runserver후 localhost:8000/admin으로 접속해서 해당 계정으로 로그인
+7. person앱의 Person테이블이 잘 보이는지 확인
+"""
 from django.db import models
 
 
