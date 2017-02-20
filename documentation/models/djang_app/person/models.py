@@ -62,45 +62,38 @@ class Person(models.Model):
 
 # ManyToMany
 class User(models.Model):
-    # 팔로우 팔로잉 관계를 나타낼땐, symmetriacal=False로 설정 가능
-    followers = models.ManyToManyField(
+    # 팔로우 팔로잉 관계를 나타낼땐,
+    # MTM 필드에 symmetriacal=False로 설정 가능
+    following = models.ManyToManyField(
         'self',
-        related_name='following_set',
+        related_name='follower_set',
         symmetrical=False,
     )
-    # following = models.ManyToManyField(
-    #     'self',
-    #     related_name='follower_set',
-    #     symmetrical=False,
-    # )
 
     # 단순 친구 관계를 나타낼 때는
-    # 한 객체가 다른 객체를 /친구/로 선언하면
-    # 반대쪽에서도 자동으로 '친구'로 설정됨
-    # 이 경우는 기본 값(symetrical=True)
+    # 한 객체가 다른 객체를 '친구'로 선언하면
+    # 반대쪽에서도 자동으로 '친구'로 설정이 된다.
+    # 이 경우는 대칭 관계가 성립된다. 즉, symmetrical=True
     #
     # 그런데, 만약, 친구관계에 대한 추가정보가 필요할 경우,
-    # through를 통해서 중간자 모델을 참조함
+    # through 를 통해서 중간자 모델을 참조함
     #
     # 중간자 모델을 사용할 경우에는
-    # symmetrical이 반드시 False이어야 함.
+    # symmetrical 이 반드시 False 이어야 함.
     # 이 경우 양쪽이 동시에 친구관계를 맺고자 하면ㅡ
     # 두 관계를 한 번에 생성해주는 메서드를 생성해 사용해야 함.
     #
     #
-    #
     # 친구관계에 대한  추가정보 중간자 모델이
-    # 친구관계를 나타내는 User ForeignKey를 두 개 초과해서
-    # 가질 경우, 어떤 User ForeignKey로(2개)가 관계를 나타내야 하는지를 위해
-    # through_fields로 알려주어야 함.
-    following = models.ManyToManyField(
+    # 친구관계를 나타내는 User ForeignKey 를 두 개 초과해서 가질 경우,
+    # 어떤 User ForeignKey (2개 중 어떤 것인지)가 관계를 나타내야 하는지를 위해
+    # through_fields 로 알려주어야 함.
+    friends = models.ManyToManyField(
         'self',
         # through='UserFriendsInfo',
         # through_fields=('from_user', 'to_user'),
         # symmetrical=False,
     )
-
-    friends = models.ManyToManyField('self')
     name = models.CharField(max_length=50)
 
     def __str__(self):
@@ -118,8 +111,8 @@ class UserFriendsInfo(models.Model):
         related_name='+',
     )
 
-    # 중개인이라는 User ForeignKey가 추가로 존재할 경우,
-    # 중간자 모델을 사용하는 곳에서 through_fields를 정의해야 함
+    # 중개인이라는 User ForeignKey 가 추가로 존재할 경우,
+    # 중간자 모델을 사용하는 곳에서 through_fields 를 정의해야 함
     recommender = models.ForeignKey(
         User,
         null=True,
@@ -131,7 +124,7 @@ class UserFriendsInfo(models.Model):
 
 
 # Extra fields on many-to-many relationships
-# 서로 다른 모델간의 MTM에서, 중간자 모델을 사용하는 ㄱ경우
+# 서로 다른 모델간의 MTM에서, 중간자 모델을 사용하는 경우
 class Idol(models.Model):
     name = models.CharField(max_length=100)
 
@@ -146,8 +139,8 @@ class Group(models.Model):
         # 두 관계를 정의하는 중간자 모델을 지정
         through='Membership',
         # 이건 기본값이며, 만약 중간자 모델에서 관계를 형성하는 두 클래스 중
-        # 한 클래스라도 한 번을 초과하여 필드로 사용될 걍우
-        # through_fields에 내용을 적어야 한다.
+        # 한 클래스라도 한 번을 초과하여 필드로 사용될 경우,
+        # through_fields 에 내용을 적어야 한다.
         #             ( from ,   to   )
         through_fields=('group', 'idol'),
     )
@@ -169,7 +162,7 @@ class Membership(models.Model):
     # idol, recommender 이렇게 두개가 있으면,
     # 중간자 모델은 어떻게  through 시켜야 하는지 모른다.
     # 추천인이라는 Target 모델에 대한 추가 피ㄹ드가 있을 경우,
-    # 이 경우에도 through_fields를 정의해줘ㅇ야 함
+    # 이 경우에도 through_fields 를 정의해줘ㅇ야 함
     date_joined = models.DateTimeField()
     recommender = models.ForeignKey(
         Idol,
