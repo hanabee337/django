@@ -8,9 +8,11 @@
     TEMPLATES 설정의 DIRS에 추가
 """
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from member.forms import LoginForm, SignupForm
+from post.models import Post
 
 
 def login_cf(request):
@@ -89,19 +91,51 @@ def signup_fbv(request):
 
     return render(request, 'member/signup.html', context)
 
-
+@login_required
 def profile(request):
     """
     1. button 1개 (로그아웃)이 존재하는 member/logout.html을 render해주는 view
     2. 메인의 우측 위 사람 모양 아이콘에 이 뷰로 오는 링크 연결
     """
 
+    """
+    자신의 게시물 수, 자신의 팔로워 수, 자신의 팔로우 수,
+    context로 전달, 출력
+    """
+    # post_count = MyUser.objects.following.count()
+
+    # if request.user.is_authenticated: -> @login_required로 대체한다.
+    post_count = Post.objects.filter(author=request.user).count()
+    follower_count = request.user.follower_set.count()
+    following_count = request.user.following.count()
+    print('{}, {}'.format(follower_count, following_count))
     context = {
+        'post_count': post_count,
+        'follower_count': follower_count,
+        'following_count': following_count,
     }
 
     return render(request, 'member/profile.html', context)
+    # else:
+    #     return redirect('member:login')
 
 
 def logout_fbv(request):
     logout(request)
     return redirect('member:login')
+
+
+def change_profile_image(request):
+    """
+    H/W:20170220
+    해당 유저의 프로필 이미지를 바꾼다.
+    0. 유저 모델에 img_profile 필드 추가, migrations
+    1. change_profile_image.html 파일 작성
+    2. ProfileImageorm 작성
+    3. 해당 Form 템플릿에 렌더링
+    4. request.method == 'POST' 일 때, request.FILES의 값을 이용해서
+        request.user의 img_profile을 변결, 저장
+    5. 처리 완료 후, member:profile로 이동
+    6. progile.tml에서 user의 프로필 이미지를 img태그를 사용해서 보여줌.
+        {{ MEDIA_URL }}을 사용함.
+    """
