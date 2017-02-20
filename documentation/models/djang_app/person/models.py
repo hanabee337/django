@@ -22,7 +22,12 @@ class Person(models.Model):
     shirt_size = models.CharField('셔츠 사이즈', max_length=1, choices=SHIRT_SIZE, default=SHIRT_SIZE[0][0])
     nationality = models.CharField('국적', max_length=200, default='South Korea')
 
-    # 외래키 관계를 자기 자신의 클래스에 갖는 경우('self')
+    # To create a recursive relationship
+    # – an object that has a many-to-one relationship with itself
+    # – use models.ForeignKey('self', on_delete=models.CASCADE).
+    # 외래키 관계를 자기 자신의 클래스에 갖는 경우
+    # One-To-Many에선 One이 사라지게 되면, Many도 같이 가라지게 됨.
+    # 즉, 기본 설정이 on_delete=models.CASCADE, 이렇게 되어 있다는 의미. 같이 지워진다는 의미.
     instructor = models.ForeignKey('self', verbose_name='담당 강사', null=True, blank=True,
                                    on_delete=models.SET_NULL, related_name='student_set')
 
@@ -44,7 +49,7 @@ class Person(models.Model):
 
     mentor = models.ForeignKey(
         'self',
-        verbose_name='사장님',
+        verbose_name='멘토',
         null=True,
         blank=True,
         on_delete=models.SET_NULL,

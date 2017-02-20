@@ -28,3 +28,20 @@ class Car(models.Model):
             self.manufacturer.title,
             self.title
         )
+
+
+"""
+>>> from car.models import Car,Manufacturer
+>>> Manufacturer.objects.create(title='현대')
+<Manufacturer: 현대>
+>>> a = Manufacturer.objects.get(id=1)
+>>> a.title
+'현대'
+>>> c = Car.objects.create(manufacturer=a,title='아반떼')
+>>> c.title
+'아반떼'
+>>> c.manufacturer
+<Manufacturer: 현대>
+>>> c
+<Car: 현대 아반떼>
+"""
