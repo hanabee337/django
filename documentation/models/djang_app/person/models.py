@@ -63,7 +63,7 @@ class Person(models.Model):
 # ManyToMany
 class User(models.Model):
     # 팔로우 팔로잉 관계를 나타낼땐,
-    # MTM 필드에 symmetriacal=False로 설정 가능
+    # MTM 필드에 symmetrical= False 로 설정 가능
     following = models.ManyToManyField(
         'self',
         related_name='follower_set',
@@ -80,7 +80,7 @@ class User(models.Model):
     #
     # 중간자 모델을 사용할 경우에는
     # symmetrical 이 반드시 False 이어야 함.
-    # 이 경우 양쪽이 동시에 친구관계를 맺고자 하면ㅡ
+    # 만약, 이 경우 양쪽이 동시에 친구관계를 맺고자 하면,
     # 두 관계를 한 번에 생성해주는 메서드를 생성해 사용해야 함.
     #
     #
