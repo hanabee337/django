@@ -3,11 +3,11 @@
 {% block content %}
 <div class="profile-container">
     <div class="profile-top">
-        <img src="" alt="" class="img_profile">
+        <img src="{{ MEDIA_URL }}{{ user.img_profile }}" alt="" class="img_profile">
         <div class="profile-text">
             <div class="text-top">
                 <span class="profile-username">{{ user.username }}</span>
-                <a class="btn" href="">프로필 편집</a>
+                <a class="btn" href="{% url 'member:change_profile_image' %}">프로필 편집</a>
                 <a class="btn" href="{% url 'member:logout' %}">Logout</a>
             </div>
             <div class="text-status">

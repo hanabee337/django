@@ -54,6 +54,8 @@ class MyUser(PermissionsMixin, AbstractBaseUser):
 
     is_staff = models.BooleanField(default=False)
 
+    img_profile = models.ImageField(upload_to='user', blank=True)
+
     USERNAME_FIELD = 'username'
     objects = MyUserManager()
 

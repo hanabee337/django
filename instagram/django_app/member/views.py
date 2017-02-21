@@ -11,7 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-from member.forms import LoginForm, SignupForm
+from member.forms import LoginForm, SignupForm, ProfileImageForm
 from post.models import Post
 
 
@@ -91,6 +91,7 @@ def signup_fbv(request):
 
     return render(request, 'member/signup.html', context)
 
+
 @login_required
 def profile(request):
     """
@@ -125,6 +126,7 @@ def logout_fbv(request):
     return redirect('member:login')
 
 
+@login_required
 def change_profile_image(request):
     """
     H/W:20170220
@@ -134,9 +136,27 @@ def change_profile_image(request):
     2. ProfileImageForm 작성
     3. 해당 Form 템플릿에 렌더링
     4. request.method == 'POST' 일 때, request.FILES의 값을 이용해서
-        request.user의 img_profile을 변결, 저장
+        request.user의 img_profile을 변경, 저장
     5. 처리 완료 후, member:profile로 이동
-    6. progile.tml에서 user의 프로필 이미지를 img태그를 사용해서 보여줌.
+    6. profile.html에서 user의 프로필 이미지를 img태그를 사용해서 보여줌.
         {{ MEDIA_URL }}을 사용함.
     """
-    pass
+    print('file name: {}, \nfunc name: {}'.format(__file__, __name__))
+    if request.method == 'POST':
+        # instance에 request.user를 넣어 기존 인스턴스의 필드를 수정하도록 함
+        form = ProfileImageForm(
+            instance=request.user,
+            data=request.POST,
+            files=request.FILES)
+        if form.is_valid():
+            form.save()
+
+            return redirect('member:profile')
+    else:
+        # instance에 request.user를 넣어 템플릿의 form에서 기존 인스턴스 필드의 정보를 나타내줌
+        form = ProfileImageForm(instance=request.user)
+    context = {
+        'form': form
+    }
+
+    return render(request, 'member/change_profile_image.html', context)

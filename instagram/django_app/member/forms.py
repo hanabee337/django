@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.password_validation import validate_password
 
 from member.models import MyUser
@@ -53,3 +54,24 @@ class SignupForm(forms.Form):
         user.nickname = nickname
         user.save()
         return user
+
+
+class SignupModelForm(UserCreationForm):
+    class Meta:
+        model = MyUser
+        fields = (
+            'username',
+            'email',
+            'gender',
+            'nickname',
+        )
+
+
+class ProfileImageForm(forms.ModelForm):
+    print('ProfileImageForm')
+
+    class Meta:
+        model = MyUser
+        fields = (
+            'img_profile',
+        )
