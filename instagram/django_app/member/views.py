@@ -131,7 +131,7 @@ def change_profile_image(request):
     해당 유저의 프로필 이미지를 바꾼다.
     0. 유저 모델에 img_profile 필드 추가, migrations
     1. change_profile_image.html 파일 작성
-    2. ProfileImageorm 작성
+    2. ProfileImageForm 작성
     3. 해당 Form 템플릿에 렌더링
     4. request.method == 'POST' 일 때, request.FILES의 값을 이용해서
         request.user의 img_profile을 변결, 저장
@@ -139,3 +139,4 @@ def change_profile_image(request):
     6. progile.tml에서 user의 프로필 이미지를 img태그를 사용해서 보여줌.
         {{ MEDIA_URL }}을 사용함.
     """
+    pass
