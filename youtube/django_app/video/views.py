@@ -17,8 +17,8 @@ import os
 import requests
 from django.shortcuts import render
 
+from .models import VideoModel
 
-# Create your views here.
 
 def get_config():
     current_path = os.path.dirname(__file__)
@@ -39,21 +39,25 @@ def get_config():
     return config
 
 
-def get_requests(keyword, key):
+def get_requests_from_youtube(keyword, key):
     params = {
         'part': 'snippet',
         'q': keyword,
         'key': key,
         'type': 'video',
-        'maxResults': 30,
+        'maxResults': 5,
     }
 
-    results = requests.get('https://www.googleapis.com/youtube/v3/search', params=params)
-    print(results)
-    return results
+    r = requests.get('https://www.googleapis.com/youtube/v3/search', params=params)
+    print(r.text)
+    result = r.text
+
+    result_dict = json.loads(result)
+    return result_dict
 
 
 def search(request):
+
     videos = []
 
     if request.method == 'POST':
@@ -63,7 +67,29 @@ def search(request):
         key = get_config()['youtube']['API_KEY']
         print(key)
 
-        results = get_requests(keyword, key)
+        result_dict = get_requests_from_youtube(keyword, key)
+
+        print(result_dict['items'])
+        items = result_dict['items']
+        for item in items:
+            title = item['snippet']['title']
+            description = item['snippet']['description']
+            published_date = item['snippet']['publishedAt']
+            youtube_id = item['id']['videoId']
+
+            defaults = {
+                'title': title,
+                'description': description,
+                'published_date': published_date,
+            }
+            # 그냥 VideoModel.objects.create하면 Model에서 설정해준 unique 속성 때문에 integrity error가 발생한다.
+            # unique로 설정한 이유는 동일한 video를 걸러내기 위함이다.
+            VideoModel.objects.get_or_create(
+                youtube_id=youtube_id,
+                defaults=defaults
+            )
+
+        videos = VideoModel.objects.all()
 
     context = {
         'videos': videos,

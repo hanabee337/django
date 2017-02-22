@@ -5,10 +5,19 @@
     <title>YouTube Application</title>
 </head>
 <body>
-<h1>YouTube Search</h1>
+<a href="{% url 'video:search' %}"><h1>YouTube Search</h1></a>
 <form action="" method="POST">{% csrf_token %}
     <input type="text" name="keyword">
     <button type="submit">검색</button>
 </form>
+{% if videos %}
+{% for video in videos %}
+    <div>
+        <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}">{{ video.title }}</a>
+        <ul>{{ video.description }}</ul>
+        <ul>{{ video.published_date }}</ul>
+    </div>
+{% endfor %}
+{% endif %}
 </body>
 </html>
