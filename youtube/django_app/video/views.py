@@ -11,6 +11,8 @@
 5. View와 Template연결
 6. 실행해 보기
 """
+from django.http import HttpResponse
+
 """
 2017.02.22 - 실습 내용
 search view의 동작 변경
@@ -55,7 +57,7 @@ def get_requests_from_youtube(keyword, key):
     }
 
     r = requests.get('https://www.googleapis.com/youtube/v3/search', params=params)
-    print(r.text)
+    # print(r.text)
     result = r.text
 
     result_dict = json.loads(result)
@@ -63,18 +65,25 @@ def get_requests_from_youtube(keyword, key):
 
 
 def search(request):
+    print('search')
+
     videos = []
+
+    if request.method == 'POST':
+        bookmark = request.POST['bookmark']
+        print(request.POST)
+        return HttpResponse('BookMark')
 
     keyword = request.GET.get('keyword', '').strip()
     if keyword != '':
-        print(keyword)
+        # print(keyword)
 
         key = get_config()['youtube']['API_KEY']
-        print(key)
+        # print(key)
 
         result_dict = get_requests_from_youtube(keyword, key)
 
-        print(result_dict['items'])
+        # print(result_dict['items'])
         items = result_dict['items']
         for item in items:
             title = item['snippet']['title']

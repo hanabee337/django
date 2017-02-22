@@ -11,8 +11,15 @@
 <div>
     <img width=240 height=160 src="{{ video.thumbnail_url }}" alt="">
     <iframe width=480 height=320 src="https://www.youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>
-    <ul><a href="https://www.youtube.com/watch?v={{ video.youtube_id }}">{{ video.title }}</a></ul>
-    <ul>{{ video.description }}</ul>
+    <ul>
+        <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}">{{ video.title }}</a>
+    </ul>
+    <ul>
+        <form action="" method="POST">{% csrf_token %}
+            <button type="submit" name="bookmark" value="{{ video.youtube_id }}">북마크 할거니?</button>
+        </form>
+        {{ video.description }}
+    </ul>
     <ul>{{ video.published_date }}</ul>
 </div>
 {% endfor %}
