@@ -11,13 +11,19 @@
 5. View와 Template연결
 6. 실행해 보기
 """
+"""
+2017.02.22 - 실습 내용
+search view의 동작 변경
+1. keyword로 전달받은 검색어를 이용한 결과를 데이터베이스에 저장하는 부분 삭제
+2. 결과를 적절히 가공하거나 그대로 템플릿으로 전달
+3. 템플릿에서는 해당 결과를 데이터베이스를 거치지 않고 바로 출력
+"""
+
 import json
 import os
 
 import requests
 from django.shortcuts import render
-
-from .models import VideoModel
 
 
 def get_config():
@@ -57,11 +63,10 @@ def get_requests_from_youtube(keyword, key):
 
 
 def search(request):
-
     videos = []
 
-    if request.method == 'POST':
-        keyword = request.POST['keyword']
+    keyword = request.GET.get('keyword', '').strip()
+    if keyword != '':
         print(keyword)
 
         key = get_config()['youtube']['API_KEY']
@@ -76,20 +81,17 @@ def search(request):
             description = item['snippet']['description']
             published_date = item['snippet']['publishedAt']
             youtube_id = item['id']['videoId']
+            thumbnail_url = item['snippet']['thumbnails']['high']['url']
 
-            defaults = {
+            item_dict = {
                 'title': title,
                 'description': description,
                 'published_date': published_date,
+                'youtube_id': youtube_id,
+                'thumbnail_url': thumbnail_url,
             }
-            # 그냥 VideoModel.objects.create하면 Model에서 설정해준 unique 속성 때문에 integrity error가 발생한다.
-            # unique로 설정한 이유는 동일한 video를 걸러내기 위함이다.
-            VideoModel.objects.get_or_create(
-                youtube_id=youtube_id,
-                defaults=defaults
-            )
 
-        videos = VideoModel.objects.all()
+            videos.append(item_dict)
 
     context = {
         'videos': videos,

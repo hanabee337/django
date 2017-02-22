@@ -1,23 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>YouTube Application</title>
-</head>
-<body>
-<a href="{% url 'video:search' %}"><h1>YouTube Search</h1></a>
-<form action="" method="POST">{% csrf_token %}
+{% extends 'common/base.html' %}
+
+{% block content %}
+
+<form action="" method="GET">
     <input type="text" name="keyword">
     <button type="submit">검색</button>
 </form>
 {% if videos %}
 {% for video in videos %}
-    <div>
-        <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}">{{ video.title }}</a>
-        <ul>{{ video.description }}</ul>
-        <ul>{{ video.published_date }}</ul>
-    </div>
+<div>
+    <img width=240 height=160 src="{{ video.thumbnail_url }}" alt="">
+    <iframe width=480 height=320 src="https://www.youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>
+    <ul><a href="https://www.youtube.com/watch?v={{ video.youtube_id }}">{{ video.title }}</a></ul>
+    <ul>{{ video.description }}</ul>
+    <ul>{{ video.published_date }}</ul>
+</div>
 {% endfor %}
 {% endif %}
-</body>
-</html>
+
+{% endblock %}
