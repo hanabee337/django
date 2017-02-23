@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>login view</h1>
-</body>
-</html>
+{% extends 'common/base.html' %}
+
+{% block content %}
+<a href="https://www.facebook.com/v2.8/dialog/oauth?client_id={{facebook_app_id}}&redirect_uri=http://localhost:8000/member/login/facebook/">페이스북으로 로그인</a>
+{% endblock %}
