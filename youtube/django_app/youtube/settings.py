@@ -14,31 +14,27 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Templates path
-TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-
-# Static path
-STATIC_URL = '/static/'
-STATIC_DIR = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIR = [
-    STATIC_DIR,
-]
-
-# media path
-MEDIA_DIR = os.path.join(BASE_DIR, 'media')
-
-# ROOT폴더의 .conf폴더에서 setting파일을 불러온다
 ROOT_DIR = os.path.dirname(BASE_DIR)
 CONF_DIR = os.path.join(ROOT_DIR, '.conf')
 
-# config = json.loads(open(os.path.join(CONF_DIR, 'settings_local.json')).read())
+# Templates
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
+# Static
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    STATIC_DIR,
+]
+
+# ROOT폴더의 .conf폴더에서 setting파일을 불러온다
+config = json.loads(open(os.path.join(CONF_DIR, 'settings_local.json')).read())
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'qi5mzv5h0fc$8s!lnrwpjuzdkxr!t6h&6qeo)@00@ab4$o%)2i'
+SECRET_KEY = 'c2qb_(t$qbp4=4arr-clqz(#3e)2rvn^_xu6y26g95-5bhtzv#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -55,9 +51,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'video',
-    'member',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +69,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            TEMPLATES_DIR,
+            TEMPLATE_DIR,
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -106,7 +99,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
-AUTH_USER_MODEL = 'member.MyUSer'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -141,4 +133,4 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
-
+STATIC_URL = '/static/'

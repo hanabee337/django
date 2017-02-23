@@ -1,7 +1,6 @@
 
-# Created by https://www.gitignore.io/api/pycharm,django,linux,git,python
-
-### Custom ###
+# Created by https://www.gitignore.io/api/pycharm,python,django,linux,git
+### custom ###
 .conf/
 
 ### Django ###
@@ -173,4 +172,4 @@ ENV/
 # Rope project settings
 .ropeproject
 
-# End of https://www.gitignore.io/api/pycharm,django,linux,git,python
+# End of https://www.gitignore.io/api/pycharm,python,django,linux,git
