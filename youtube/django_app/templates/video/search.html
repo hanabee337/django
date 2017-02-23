@@ -1,5 +1,24 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
+<form action="" method="POST">{% csrf_token %}
+    <div>
+        <input type="text" name="keyword">
+        <button type="submit">검색</button>
+    </div>
+</form>
 
+<div>
+    {% if videos %}
+        {% for video in videos %}
+            <div>
+                <img width=240 height=180 src="{{ video.thumbnail_url }}" alt="">
+                <iframe width=360 height=240 src="http://youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>
+                <p><a href="https://www.youtube.com/watch?v={{ video.youtube_id }}">{{ video.title }}</a></p>
+                <p>{{ video.description }}</p>
+                <p>{{ video.publishedAt }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
 {% endblock %}
