@@ -2,6 +2,7 @@ import pprint
 
 from django.shortcuts import render
 
+# Create your views here.
 from facebook import settings
 
 
@@ -30,8 +31,6 @@ def login_facebook(request):
     # redirect_uri를 이용해 다시 login_facebook으로 돌아온 후의 동작
     if request.GET.get('code'):
         code = request.GET.get('code')
-
-        # 전달받은 code값을 이용해서 access_token을 요청함
         url_request_access_token = 'https://graph.facebook.com/v2.8/oauth/access_token'
         params = {
             'client_id': APP_ID,
@@ -57,3 +56,4 @@ def login_facebook(request):
         pprint(dict_debug_token)
         USER_ID = dict_debug_token['data']['user_id']
         print('USER_ID : %s' % USER_ID)
+
