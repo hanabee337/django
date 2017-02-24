@@ -1,4 +1,8 @@
-
+"""
+sms에 view 생성(index)
+수신자 번호, 메시지를 입력받을 수 있는 Form 클래스 구현
+해당 Form에서 데이터를 받아
+"""
 import json
 import os
 
@@ -24,7 +28,7 @@ if __name__ == "__main__":
     params['type'] = 'sms'
     params['to'] = '01032656734'
     params['from'] = config['sms']['sender_num']
-    params['text'] = 'WHO are you?'
+    params['text'] = 'Lets go home'
 
     cool = Message(api_key=api_key, api_secret=api_secret)
     try:
