@@ -12,7 +12,7 @@
         {% if user.is_authenticated %}
             <img src="{{ MEDIA_URL }}{{ user.img_profile }}" alt="" width="100px">
             <span> {{ user }}님으로 로그인 했습니다.</span>
-            <a href="{% url 'member:logout' %}">로그이웃</a>
+            <a href="{% url 'member:logout' %}">로그아웃</a>
         {% else %}
             <a href="{% url 'member:login' %}">로그인</a>
         {% endif %}

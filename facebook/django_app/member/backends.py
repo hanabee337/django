@@ -15,11 +15,11 @@ class FacebookBackend():
         )
         params = {
             'type': 'large',
-            'width':'500',
-            'height':'500',
+            'width': '500',
+            'height': '500',
         }
         temp_file = NamedTemporaryFile(delete=False)
-        r = requests.get(url_profile, params, stream = True)
+        r = requests.get(url_profile, params, stream=True)
         _, file_ext = os.path.splitext(r.url)
         print('front: %s ' % _)
         print('back: %s ' % file_ext)
@@ -34,14 +34,14 @@ class FacebookBackend():
         for chunk in r.iter_content(1024):
             temp_file.write(chunk)
 
-
         defaults = {
-            'first_name': extra_fields.get('first_name'),
-            'last_name': extra_fields.get('last_name'),
-            'email': extra_fields.get('email'),
+            'first_name': extra_fields.get('first_name', ''),
+            'last_name': extra_fields.get('last_name', ''),
+            'email': extra_fields.get('email', ''),
         }
         user, user_created = MyUser.objects.get_or_create(
-            username=facebook_id
+            username=facebook_id,
+            defaults=defaults,
         )
         user.img_profile.save(file_name, File(temp_file))
         return user

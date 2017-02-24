@@ -82,6 +82,6 @@ def login_facebook(request):
 
         # 페이스북 유저 ID만으로 인증
         user = authenticate(facebook_id=USER_ID,
-                            extra_fiedls=dict_user_info)
+                            extra_fields=dict_user_info)
         login(request, user)
         return redirect('index')
