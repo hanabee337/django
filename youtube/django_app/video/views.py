@@ -1,6 +1,6 @@
 """
 2017.02.21
-search view의 동작 변경
+- search view의 동작 변경
 1. keyword로 전달받은 검색어를 이용한 결과를 데이터베이스에 저장하는 부분 삭제
 2. 결과를 적절히 가공하거나 그대로 템플릿으로 전달
 3. 템플릿에서는 해당 결과를 데이터베이스를 거치지 않고 바로 출력
@@ -11,7 +11,7 @@ from video.models import Video
 
 """
 2017.02.21
-Next, Prev버튼 추가
+- Next, Prev버튼 추가
 1. Youtube Search API에 요청을 보낸 후, 결과에
     1-2. nextPageToken만 올 경우에는 첫 번째 페이지
     1-3. 둘다 올 경우에는 중간 어딘가
@@ -132,7 +132,7 @@ def search(request):
         'videos': videos,
     }
 
-    print(request.GET)
+    # print(request.GET)
 
     page_token = request.GET.get('page_token')
 
@@ -180,9 +180,9 @@ def search(request):
         # 그런데, .get으로 한 이유는 만약 찾는 게 없으면 None으로 반환되니..
         # template에서 if 문으로 처리 할 수가 있다.
         next_page_token = content.get('nextPageToken')
-        print('next_page_token: %s' % next_page_token)
+        # print('next_page_token: %s' % next_page_token)
         prev_page_token = content.get('prevPageToken')
-        print('prev_page_token: %s' % prev_page_token)
+        # print('prev_page_token: %s' % prev_page_token)
         total_results = content['pageInfo'].get('totalResults')
         context['next_page_token'] = next_page_token
         context['prev_page_token'] = prev_page_token
@@ -238,7 +238,7 @@ def search(request):
             # if not video_created:
             #     print('youtube id: %s ' % youtube_id)
             #     print('title: %s' % title)
-        # videos = Video.objects.all()
+            # videos = Video.objects.all()
 
     # context = {
     #     'videos': videos,
@@ -248,20 +248,48 @@ def search(request):
 
 @login_required
 def add_bookmark(request):
+    print('add_bookmark')
+
     if request.method == 'POST':
         title = request.POST['title']
         youtube_id = request.POST['youtube_id']
         description = request.POST['description']
-        published_date = request.POST['published_date']
+        published_date_str = request.POST['published_date']
+        print(published_date_str)
+        published_date = parse(published_date_str)
+        print(published_date)
+        prev_path = request.POST['path']
 
         defaults = {
             'title': title,
             'description': description,
-            'published_date': published_date,
+            'published_date': published_date
         }
-        video = Video.objects.get_or_create(
+
+        # video = Video.objects.get_or_create
+        # 이렇게 하면, 아래와 같은 에러가 발생함.
+        # 꼭, video, _ = Video.objects.get_or_create 이렇게 해야 함.why(?)
+        # TypeError at /video/bookmark/add/
+        # int() argument must be a string,
+        # a bytes-like object or a number, not 'Video'
+        #         <  get_or_create(defaults=None, **kwargs)  >
+        # Returns a tuple of (object, created), where object is the retrieved
+        # or created object and created is a boolean specifying whether a new
+        # object was created.
+        video, _ = Video.objects.get_or_create(
             defaults=defaults,
             youtube_id=youtube_id
         )
         request.user.bookmark_videos.add(video)
-        return redirect('video:search')
+
+        # return redirect('video:search')
+        # redirect는 POST 요청을 보내는 것이 불가능하다.
+        # 그렇기 때문에, redirect로 가야되는 이전 page에 대한 정보는
+        # GET parameter에 모든 걸 넣어놔야 한다.
+        # 그 정보는 request.get_full_path에 있다.
+        # 이전에 요청했던 URL정보를 가져옴(GET parameter포함)
+        # POST 요청을 받았을 때는 기존에 어디였는지를
+        # template에서 이전 페이지에 대한 path를 보내주어야 한다.
+        # 그럼, template에선 이전 페이지에 대한 path를 어떻게 아느냐?
+        # get_full_path를 사용해서 알 수가 있다.
+        return redirect(prev_path)

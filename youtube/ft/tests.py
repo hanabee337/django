@@ -19,8 +19,10 @@
 6. 실행해보기^^
 """
 """
-170222 AbstractUser를 상속받아 CustomUser구현
+2017.02.22
+- AbstractUser를 상속받아 CustomUser구현
 django abstractuser customuser로 googling
+
 1. member app생성
 2. AbstractUser를 상속받은 MyUser를 생성
 3. AUTH_USER_MODEL에 등록
@@ -31,7 +33,8 @@ django abstractuser customuser로 googling
     (기본값으로 두면 패스워드 해싱등이 동작하지 않음)
 """
 """
-170222 숙제
+2017.02.22 숙제
+
 1. 북마크 기능을 만든다.
     검색 결과의 각 아이템에 '북마크하기'버튼을 만들어서 누르면 DB에 저장
 2. 북마크 목록 보기 페이지를 만든다.

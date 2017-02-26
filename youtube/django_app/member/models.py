@@ -13,4 +13,5 @@ class Video에서 MTM을 쓰면
 class MyUser(AbstractUser):
     bookmark_videos = models.ManyToManyField(
         'video.Video',
+        blank=True,
     )
