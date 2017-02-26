@@ -10,13 +10,10 @@
 
 <ul>
     {% if videos %}
-    <li>
-        총{{ videos.count }}개
-    </li>
         {% for video in videos %}
             <li>
                 <!--<img width=240 height=180 src="{{ video.thumbnail_url }}" alt="">-->
-                <iframe width=360 height=240 src="http://youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>
+                <iframe width=240 height=180 src="http://youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>
                 <p><a href="https://www.youtube.com/watch?v={{ video.youtube_id }}">{{ video.title }}</a></p>
                 <p>{{ video.description }}</p>
                 <p>{{ video.publishedAt }}</p>
@@ -24,4 +21,22 @@
         {% endfor %}
     {% endif %}
 </ul>
+
+<div>
+    {% if prev_page_token %}
+        <form action="">
+            <input type="hidden" name="keyword" value="{{ keyword }}">
+            <input type="hidden" name="page_token" value="{{ prev_page_token }}">
+            <button type="submit">Prev</button>
+        </form>
+    {% endif %}
+
+    {% if next_page_token %}
+        <form action="">
+            <input type="hidden" name="keyword" value="{{ keyword }}">
+            <input type="hidden" name="page_token" value="{{ next_page_token }}">
+            <button type="submit">Next</button>
+        </form>
+    {% endif %}
+</div>
 {% endblock %}
