@@ -8,17 +8,20 @@
     </div>
 </form>
 
-<div>
+<ul>
     {% if videos %}
+    <li>
+        {{ videos.count }}개
+    </li>
         {% for video in videos %}
-            <div>
-                <img width=240 height=180 src="{{ video.thumbnail_url }}" alt="">
-                <iframe width=360 height=240 src="http://youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>
+            <li>
+                <!--<img width=240 height=180 src="{{ video.thumbnail_url }}" alt="">-->
+                <!--<iframe width=360 height=240 src="http://youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>-->
                 <p><a href="https://www.youtube.com/watch?v={{ video.youtube_id }}">{{ video.title }}</a></p>
                 <p>{{ video.description }}</p>
                 <p>{{ video.publishedAt }}</p>
-            </div>
+            </li>
         {% endfor %}
     {% endif %}
-</div>
+</ul>
 {% endblock %}

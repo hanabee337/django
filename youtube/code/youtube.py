@@ -51,7 +51,7 @@ print(type(config_str))
 # 해당내용 -> 1번에서 최종 결과
 config = json.loads(config_str)
 print('type(config) : %s' % type(config))
-print(config)
+print('config: %s' % config)
 
 youtube_api_key = config['youtube']['API_KEY']
 print(youtube_api_key)
