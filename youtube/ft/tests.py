@@ -18,6 +18,15 @@
 5. View와 Template연결
 6. 실행해보기^^
 """
+"""
+170222 AbstractUser를 상속받아 CustomUser구현
+django abstractuser customuser로 googling
+1. member app생성
+2. AbstractUser를 상속받은 MyUser를 생성
+3. AUTH_USER_MODEL에 등록
+4. 마이그레이션 해본다
+"""
+
 from selenium import webdriver
 
 
