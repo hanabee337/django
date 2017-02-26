@@ -6,6 +6,8 @@ import requests
 from dateutil.parser import parse
 from django.shortcuts import render
 
+from video.models import Video
+
 
 def get_config():
     current_path = os.path.abspath(__file__)
@@ -61,14 +63,42 @@ def get_videos(content):
         # pip install python-dateutil
         published_date = parse(published_date_str)
 
-        video = {
+        # video = {
+        #     'title': title,
+        #     'description': description,
+        #     'youtube_id': youtube_id,
+        #     'publishedAt': published_date,
+        #     'thumbnail_url': thumbnail_url,
+        # }
+        # videos.append(video)
+
+        # 단순히 Video.objects.create을 하면 검색할 때 마다
+        # DB에 중복되게 저장이 된다. 이를 방지하기 위해
+        # youtube_id를 unique하게 설정을 하였음.
+        # 그래서, create 대신,
+        # get_or_create(있으면 가져오거나, 없으면 새로 만들어 save함)를 사용하였고,
+        # 그러나, title이나 description이 같은 것들은 걸러내지 못함.
+        # 그래서, get_or_create argumnet에 defaults를 추가함.
+        # get을 했는데, 있으면 object를 가져오고,
+        # 없으면, new object를 create하는데, 이때 defaults 로 설정한
+        # arguments들을 사용함.
+        # get_or_create commit=false로 googling.
+        defaults = {
             'title': title,
             'description': description,
-            'youtube_id': youtube_id,
-            'publishedAt': published_date,
-            'thumbnail_url': thumbnail_url,
+            'published_date': published_date
         }
-        videos.append(video)
+        # get_or_created를 안쓰면, try, except로 하는 방법이 있다.
+        # 그러나, 코드가 길어짐.
+        video, video_created = Video.objects.get_or_create(
+            youtube_id=youtube_id,
+            defaults=defaults
+        )
+        if not video_created:
+            print('youtube id: %s ' % youtube_id)
+            print('title: %s' % title)
+
+    videos = Video.objects.all()
 
     return videos
 
