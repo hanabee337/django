@@ -54,7 +54,7 @@ print('type(config) : %s' % type(config))
 print('config: %s' % config)
 
 youtube_api_key = config['youtube']['API_KEY']
-print(youtube_api_key)
+print('youtube_api_key : %s' % youtube_api_key)
 
 # 3. requests 라이브러리를 이용(pip install requests), GET요청으로 데이터를 받아온 후
 # 이렇게 Parameter와 URL을 분리합니다
@@ -78,9 +78,24 @@ result_dict = json.loads(content)
 pprint(result_dict)
 
 # 5. 이후 내부에 있는 검색결과를 적절히 루프하며 print해주기
+kind = result_dict['kind']
+etag = result_dict['etag']
+next_page_token = result_dict['nextPageToken']
+region_code = result_dict['regionCode']
+page_info = result_dict['pageInfo']
+page_info_total_results = page_info['totalResults']
+page_info_results_per_page = page_info['resultsPerPage']
+
+print('kind : %s' % kind)
+print('etag : %s' % etag)
+print('next_page_token : %s' % next_page_token)
+print('region_code : %s' % region_code)
+print('page_info_total_results : %s' % page_info_total_results)
+print('page_info_results_per_page : %s' % page_info_results_per_page)
+
 items = result_dict['items']
 
-for item, index in enumerate(items):
+for item in items:
     title = item['snippet']['title']
     published_date_str = item['snippet']['publishedAt']
     description = item['snippet']['description']
@@ -89,3 +104,4 @@ for item, index in enumerate(items):
 
     # pip install python-dateutil
     published_date = parse(published_date_str)
+    print(published_date)
