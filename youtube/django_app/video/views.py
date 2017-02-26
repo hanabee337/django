@@ -5,6 +5,10 @@ search view의 동작 변경
 2. 결과를 적절히 가공하거나 그대로 템플릿으로 전달
 3. 템플릿에서는 해당 결과를 데이터베이스를 거치지 않고 바로 출력
 """
+from django.contrib.auth.decorators import login_required
+
+from video.models import Video
+
 """
 2017.02.21
 Next, Prev버튼 추가
@@ -21,7 +25,7 @@ import os
 
 import requests
 from dateutil.parser import parse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 
 def get_config():
@@ -120,6 +124,9 @@ def get_videos(content):
 
 
 def search(request):
+    # print('request.path_info: %s' % request.path_info)
+    print('request.get_full_path: %s' % request.get_full_path())
+
     videos = []
     context = {
         'videos': videos,
@@ -237,3 +244,24 @@ def search(request):
     #     'videos': videos,
     # }
     return render(request, 'video/search.html', context)
+
+
+@login_required
+def add_bookmark(request):
+    if request.method == 'POST':
+        title = request.POST['title']
+        youtube_id = request.POST['youtube_id']
+        description = request.POST['description']
+        published_date = request.POST['published_date']
+
+        defaults = {
+            'title': title,
+            'description': description,
+            'published_date': published_date,
+        }
+        video = Video.objects.get_or_create(
+            defaults=defaults,
+            youtube_id=youtube_id
+        )
+        request.user.bookmark_videos.add(video)
+        return redirect('video:search')
