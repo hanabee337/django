@@ -24,7 +24,11 @@ django abstractuser customuser로 googling
 1. member app생성
 2. AbstractUser를 상속받은 MyUser를 생성
 3. AUTH_USER_MODEL에 등록
-4. 마이그레이션 해본다
+4. 마이그레이션
+**extra
+5. Django admin에 MyUser를 등록
+6. 기본 UserAdmin을 상속받아 사용자 관련 모듈이 잘 작동하도록 설정
+    (기본값으로 두면 패스워드 해싱등이 동작하지 않음)
 """
 
 from selenium import webdriver
