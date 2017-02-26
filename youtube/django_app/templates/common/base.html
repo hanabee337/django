@@ -1,12 +1,21 @@
+{% load staticfiles %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>YouTube Search Application</title>
+    <link rel="stylesheet" href="{% static 'css/base.min.css' %}?{% now 'c' %}">
+    <link rel="stylesheet" href="{% static 'css/common.min.css' %}?{% now 'c' %}">
+    <link rel="stylesheet" href="{% static 'css/search.min.css' %}?{% now 'c' %}">
 </head>
 <body>
-<h2><a href="{% url 'video:search' %}">YouTube Search</a></h2>
-{% block content %}
-{% endblock %}
+  <div id="wrap">
+    <h2><a href="{% url 'video:search' %}">YouTube Search</a></h2>
+    <div class="content-container">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </div>
 </body>
 </html>
