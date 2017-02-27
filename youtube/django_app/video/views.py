@@ -250,6 +250,7 @@ def search(request):
 def bookmark_add(request):
     print('bookmark_add')
 
+    # DB에 영향을 주므로 모든 데이터는 POST형식으로 처리해야 한다.
     if request.method == 'POST':
         title = request.POST['title']
         youtube_id = request.POST['youtube_id']
