@@ -254,6 +254,7 @@ def bookmark_add(request):
         title = request.POST['title']
         youtube_id = request.POST['youtube_id']
         description = request.POST['description']
+        thumbnail_url = request.POST['thumbnail_url']
         published_date_str = request.POST['published_date']
         print(published_date_str)
         published_date = parse(published_date_str)
@@ -263,7 +264,8 @@ def bookmark_add(request):
         defaults = {
             'title': title,
             'description': description,
-            'published_date': published_date
+            'published_date': published_date,
+            'thumbnail_url': thumbnail_url,
         }
 
         # video = Video.objects.get_or_create
