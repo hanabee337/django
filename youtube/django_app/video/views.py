@@ -293,3 +293,12 @@ def bookmark_add(request):
         # 그럼, template에선 이전 페이지에 대한 path를 어떻게 아느냐?
         # get_full_path를 사용해서 알 수가 있다.
         return redirect(prev_path)
+
+@login_required
+def bookmark_list(request):
+    bookmarks = request.user.bookmark_videos.all()
+    context = {
+        'bookmarks': bookmarks,
+    }
+
+    return render(request, 'video/bookmark_list.html', context)

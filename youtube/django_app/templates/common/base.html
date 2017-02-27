@@ -11,7 +11,11 @@
 </head>
 <body>
   <div id="wrap">
-    <h2><a href="{% url 'video:search' %}">YouTube Search</a></h2>
+    <h2>
+        <a href="{% url 'video:search' %}">YouTube Search</a>
+    </h2>
+      <a href="{% url 'video:bookmark_list' %}">Go to My Bookmarks</a>
+
     <div class="content-container">
       {% block content %}
       {% endblock %}
