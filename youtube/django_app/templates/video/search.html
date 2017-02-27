@@ -13,8 +13,8 @@
         {% if videos %}
         {% for video in videos %}
         <li class="video-item">
-            <!--<img width=240 height=180 src="{{ video.thumbnail_url }}" alt="">-->
-            <iframe width=240 height=180 src="http://youtube.com/embed/{{ video.youtube_id }}" frameborder="0" class="item-video"></iframe>
+            <!-- <img class="item-thumbnail" width=240 height=180 src="{{ video.thumbnail_url }}" alt=""> -->
+            <iframe class="item-video" width=240 height=180 src="http://youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>
             <div class="item-content">
                 <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}" class="item-title">{{ video.title }}</a>
                 <p class="item-desc">{{ video.description }}</p>

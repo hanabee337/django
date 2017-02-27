@@ -16,12 +16,12 @@ ul, ol {
   margin: 0;
   list-style: none; }
 
+form.inline {
+  display: inline-block; }
+
 p {
   margin: 0;
   padding: 0; }
-
-form.inline {
-  display: inline-block; }
 
 ul.video-list li.video-item {
   position: relative;
@@ -41,7 +41,7 @@ ul.video-list li.video-item {
     position: absolute;
     left: 0;
     top: 0;
-    padding-left: 250px;
+    margin-left: 250px;
     width: 500px;
     height: 100%;
     display: inline-block;
