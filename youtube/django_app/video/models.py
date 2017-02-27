@@ -20,4 +20,3 @@ class Video에서 MTM을 쓰면
 그래서, Video에 대해서, User에서 연결을 시켜주는 것이 깔끔해 보임
 """
 
-

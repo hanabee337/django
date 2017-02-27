@@ -294,6 +294,7 @@ def bookmark_add(request):
         # get_full_path를 사용해서 알 수가 있다.
         return redirect(prev_path)
 
+
 @login_required
 def bookmark_list(request):
     bookmarks = request.user.bookmark_videos.all()
