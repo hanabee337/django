@@ -6,9 +6,9 @@
         {% for video in bookmarks %}
         <li class="video-item">
             <img class="item-thumbnail" width=240 height=180 src="{{ video.thumbnail_url }}" alt="">
-            <!--<iframe class="item-video" width=240 height=180 src="http://youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>-->
+            <iframe class="item-video" width=240 height=180 src="http://youtube.com/embed/{{ video.youtube_id }}" frameborder="0"></iframe>
             <div class="item-content">
-                <a href="https://www.youtube.com/watch?v={{ video.youtube_id }}" class="item-title">{{ video.title }}</a>
+                <a class="item-title" href="https://www.youtube.com/watch?v={{ video.youtube_id }}">{{ video.title }}</a>
                 <p class="item-desc">{{ video.description }}</p>
                 <p class="item-date">{{ video.published_date }}</p>
             </div>
