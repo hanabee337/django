@@ -20,7 +20,7 @@
                 <p class="item-desc">{{ video.description }}</p>
                 <p class="item-date">{{ video.publishedAt }}</p>
 
-                <form action="{% url 'video:add_bookmark' %}" method="POST">{% csrf_token %}
+                <form action="{% url 'video:bookmark_add' %}" method="POST">{% csrf_token %}
                     <input type="hidden" name="title" value="{{ video.title }}">
                     <input type="hidden" name="description" value="{{ video.description }}">
                     <input type="hidden" name="published_date" value="{{ video.publishedAt|date:'c' }}">

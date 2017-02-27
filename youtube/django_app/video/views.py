@@ -247,8 +247,8 @@ def search(request):
 
 
 @login_required
-def add_bookmark(request):
-    print('add_bookmark')
+def bookmark_add(request):
+    print('bookmark_add')
 
     if request.method == 'POST':
         title = request.POST['title']
