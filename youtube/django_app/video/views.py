@@ -6,6 +6,7 @@
 3. 템플릿에서는 해당 결과를 데이터베이스를 거치지 않고 바로 출력
 """
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from member.models import BookmarkVideo
 from video.models import Video
@@ -348,7 +349,18 @@ def bookmark_list(request):
     # 해당 video에 대해서 query를 계속 날리기 때문에 성능상 좋지 않다.
     # 이걸 방지하기 위해 하기와 같이 함.
     # video에 대한 query를 미리 한 번에 다 가져옴.
-    bookmarks = request.user.bookmarkvideo_set.select_related('video')
+    all_bookmarks = request.user.bookmarkvideo_set.select_related('video')
+
+    # 전체 북마크 리스트를 페이지네이션 처리
+    paginator = Paginator(all_bookmarks, 5)
+    page = request.GET.get('page')
+    try:
+        bookmarks = paginator.page(page)
+    except PageNotAnInteger:
+        bookmarks = paginator.page(1)
+    except EmptyPage:
+        bookmarks = paginator.page(paginator.num_pages)
+
     context = {
         'bookmarks': bookmarks,
     }

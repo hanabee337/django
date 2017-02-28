@@ -2,6 +2,10 @@
 
 .btn { background-color: transparent; border: 1px solid rgba(0, 0, 0, 0.0975); padding: 3px 8px; border-radius: 2px; text-decoration: none; }
 
+.btn-pagination { font-size: 16px; background-color: #666; color: white; padding: 4px 12px; }
+
+.paginator { text-align: center; }
+
 ul, ol { padding: 0; margin: 0; list-style: none; }
 
 form.inline { display: inline-block; }
