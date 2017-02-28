@@ -7,6 +7,7 @@
 """
 from django.contrib.auth.decorators import login_required
 
+from member.models import BookmarkVideo
 from video.models import Video
 
 """
@@ -283,7 +284,34 @@ def bookmark_add(request):
             defaults=defaults,
             youtube_id=youtube_id
         )
-        request.user.bookmark_videos.add(video)
+
+        # Case #1
+        # 중간자모델없이 M2M필드에 바로 인스턴스를 추가할 때
+        # request.user.bookmark_videos.add(video)
+
+        # Case #2
+        # BookmarkVideo 중간자모델의 Manager를 직접 사용할 때
+        # 중간자 모델을 사용하므로, MTM 필드의 add가 아닌 중간자모델
+        # Manager의 create를 사용해야 함.
+        # BookmarkVideo에 있는 객체를 하나 만들어주면, M2M로 연결이 됨.
+        # BookmarkVideo.objects.create(
+        #     user=request.user,
+        #     video=video
+        # )
+        # 상기와 같이 객체 하나를 만들어 주면,
+        # M2M 필드에 하나가 추가가 될 것임.
+
+        # Case #3
+        # MyUser와 중간자 모델을 연결시켜주는 related_manager를 사용할 때
+        # 실제로는 어떤 user에 대해서 만드는 것이기 때문에 하기와 같이 해야 함.
+        request.user.bookmarkvideo_set.create(
+            video=video
+        )
+        # request.user.bookmarkvideo_set과 BookmarkVideo.objects와 동일함.
+        # M2M으로 연결되어 있는 related manager를 가져다 쓰는게 request.user.bookmarkvideo_set
+        # request.user.bookmarkvideo_set.create할 때, related manager를 쓰면 user값이 기본으로 들어감.
+
+
 
         # return redirect('video:search')
         # redirect는 POST 요청을 보내는 것이 불가능하다.
@@ -300,7 +328,14 @@ def bookmark_add(request):
 
 @login_required
 def bookmark_list(request):
-    bookmarks = request.user.bookmark_videos.all()
+
+    # bookmarks = request.user.bookmarkvideo_set.all()
+    # BookmarkVideo 모델에선 user와 video에 대한 ForeignKey값만 있음
+    # 즉, id만 있음. 그런데, template에서 for문으로 하나의 bookmark 대해
+    # 해당 video에 대해서 query를 계속 날리기 때문에 성능상 좋지 않다.
+    # 이걸 방지하기 위해 하기와 같이 함.
+    # video에 대한 query를 미리 한 번에 다 가져옴.
+    bookmarks = request.user.bookmarkvideo_set.select_related('video')
     context = {
         'bookmarks': bookmarks,
     }
