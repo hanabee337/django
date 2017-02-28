@@ -194,15 +194,21 @@ def search(request):
 
         items = content['items']
         for item in items:
+            published_date_str = item['snippet']['publishedAt']
+
             # 실제로 사용될 데이터
             title = item['snippet']['title']
-            published_date_str = item['snippet']['publishedAt']
             description = item['snippet']['description']
             youtube_id = item['id']['videoId']
             thumbnail_url = item['snippet']['thumbnails']['high']['url']
-
             # pip install python-dateutil
             published_date = parse(published_date_str)
+
+            # 이미 북마크에 추가된 영상인지 판단
+            is_exist = BookmarkVideo.objects.filter(
+                user=request.user,
+                video__youtube_id=youtube_id
+            ).exists()
 
             # 현재 item을 dict으로 정의
             video = {
@@ -211,6 +217,7 @@ def search(request):
                 'youtube_id': youtube_id,
                 'publishedAt': published_date,
                 'thumbnail_url': thumbnail_url,
+                'is_exist': is_exist,
             }
             videos.append(video)
 
@@ -248,8 +255,8 @@ def search(request):
 
 
 @login_required
-def bookmark_add(request):
-    print('bookmark_add')
+def bookmark_toggle(request):
+    print('bookmark_toggle')
 
     # DB에 영향을 주므로 모든 데이터는 POST형식으로 처리해야 한다.
     if request.method == 'POST':
@@ -263,72 +270,78 @@ def bookmark_add(request):
         print(published_date)
         prev_path = request.POST['path']
 
-        defaults = {
-            'title': title,
-            'description': description,
-            'published_date': published_date,
-            'thumbnail_url': thumbnail_url,
-        }
+        # 이미 북마크가 되어 있는지 확인한 다음,
+        # 있으면 delete 하고, 없으면 create 해서 북마크 처리까지 해준다.
+        # 마지막에는 redirect 해준다.
+        exist_bookmark_list = request.user.bookmarkvideo_set.filter(
+            video__youtube_id=youtube_id)
+        if exist_bookmark_list:
+            exist_bookmark_list.delete()
+        else:
+            defaults = {
+                'title': title,
+                'description': description,
+                'published_date': published_date,
+                'thumbnail_url': thumbnail_url,
+            }
 
-        # video = Video.objects.get_or_create
-        # 이렇게 하면, 아래와 같은 에러가 발생함.
-        # 꼭, video, _ = Video.objects.get_or_create 이렇게 해야 함.why(?)
-        # TypeError at /video/bookmark/add/
-        # int() argument must be a string,
-        # a bytes-like object or a number, not 'Video'
-        #         <  get_or_create(defaults=None, **kwargs)  >
-        # Returns a tuple of (object, created), where object is the retrieved
-        # or created object and created is a boolean specifying whether a new
-        # object was created.
-        video, _ = Video.objects.get_or_create(
-            defaults=defaults,
-            youtube_id=youtube_id
-        )
+            # video = Video.objects.get_or_create
+            # 이렇게 하면, 아래와 같은 에러가 발생함.
+            # 꼭, video, _ = Video.objects.get_or_create 이렇게 해야 함.why(?)
+            # TypeError at /video/bookmark/add/
+            # int() argument must be a string,
+            # a bytes-like object or a number, not 'Video'
+            #         <  get_or_create(defaults=None, **kwargs)  >
+            # Returns a tuple of (object, created), where object is the retrieved
+            # or created object and created is a boolean specifying whether a new
+            # object was created.
+            video, _ = Video.objects.get_or_create(
+                defaults=defaults,
+                youtube_id=youtube_id
+            )
 
-        # Case #1
-        # 중간자모델없이 M2M필드에 바로 인스턴스를 추가할 때
-        # request.user.bookmark_videos.add(video)
+            # Case #1
+            # 중간자모델없이 M2M필드에 바로 인스턴스를 추가할 때
+            # request.user.bookmark_videos.add(video)
 
-        # Case #2
-        # BookmarkVideo 중간자모델의 Manager를 직접 사용할 때
-        # 중간자 모델을 사용하므로, MTM 필드의 add가 아닌 중간자모델
-        # Manager의 create를 사용해야 함.
-        # BookmarkVideo에 있는 객체를 하나 만들어주면, M2M로 연결이 됨.
-        # BookmarkVideo.objects.create(
-        #     user=request.user,
-        #     video=video
-        # )
-        # 상기와 같이 객체 하나를 만들어 주면,
-        # M2M 필드에 하나가 추가가 될 것임.
+            # Case #2
+            # BookmarkVideo 중간자모델의 Manager를 직접 사용할 때
+            # 중간자 모델을 사용하므로, MTM 필드의 add가 아닌 중간자모델
+            # Manager의 create를 사용해야 함.
+            # BookmarkVideo에 있는 객체를 하나 만들어주면, M2M로 연결이 됨.
+            # BookmarkVideo.objects.create(
+            #     user=request.user,
+            #     video=video
+            # )
+            # 상기와 같이 객체 하나를 만들어 주면,
+            # M2M 필드에 하나가 추가가 될 것임.
 
-        # Case #3
-        # MyUser와 중간자 모델을 연결시켜주는 related_manager를 사용할 때
-        # 실제로는 어떤 user에 대해서 만드는 것이기 때문에 하기와 같이 해야 함.
-        request.user.bookmarkvideo_set.create(
-            video=video
-        )
-        # request.user.bookmarkvideo_set과 BookmarkVideo.objects와 동일함.
-        # M2M으로 연결되어 있는 related manager를 가져다 쓰는게 request.user.bookmarkvideo_set
-        # request.user.bookmarkvideo_set.create할 때, related manager를 쓰면 user값이 기본으로 들어감.
+            # Case #3
+            # MyUser와 중간자 모델을 연결시켜주는 related_manager를 사용할 때
+            # 실제로는 어떤 user에 대해서 만드는 것이기 때문에 하기와 같이 해야 함.
+            request.user.bookmarkvideo_set.create(
+                video=video
+            )
+            # request.user.bookmarkvideo_set과 BookmarkVideo.objects와 동일함.
+            # M2M으로 연결되어 있는 related manager를 가져다 쓰는게 request.user.bookmarkvideo_set
+            # request.user.bookmarkvideo_set.create할 때, related manager를 쓰면 user값이 기본으로 들어감.
 
 
-
-        # return redirect('video:search')
-        # redirect는 POST 요청을 보내는 것이 불가능하다.
-        # 그렇기 때문에, redirect로 가야되는 이전 page에 대한 정보는
-        # GET parameter에 모든 걸 넣어놔야 한다.
-        # 그 정보는 request.get_full_path에 있다.
-        # 이전에 요청했던 URL정보를 가져옴(GET parameter포함)
-        # POST 요청을 받았을 때는 기존에 어디였는지를
-        # template에서 이전 페이지에 대한 path를 보내주어야 한다.
-        # 그럼, template에선 이전 페이지에 대한 path를 어떻게 아느냐?
-        # get_full_path를 사용해서 알 수가 있다.
+            # return redirect('video:search')
+            # redirect는 POST 요청을 보내는 것이 불가능하다.
+            # 그렇기 때문에, redirect로 가야되는 이전 page에 대한 정보는
+            # GET parameter에 모든 걸 넣어놔야 한다.
+            # 그 정보는 request.get_full_path에 있다.
+            # 이전에 요청했던 URL정보를 가져옴(GET parameter포함)
+            # POST 요청을 받았을 때는 기존에 어디였는지를
+            # template에서 이전 페이지에 대한 path를 보내주어야 한다.
+            # 그럼, template에선 이전 페이지에 대한 path를 어떻게 아느냐?
+            # get_full_path를 사용해서 알 수가 있다.
         return redirect(prev_path)
 
 
 @login_required
 def bookmark_list(request):
-
     # bookmarks = request.user.bookmarkvideo_set.all()
     # BookmarkVideo 모델에선 user와 video에 대한 ForeignKey값만 있음
     # 즉, id만 있음. 그런데, template에서 for문으로 하나의 bookmark 대해
