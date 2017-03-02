@@ -1,2 +1,4 @@
 Django==1.10.5
+olefile==0.44
+Pillow==4.0.0
 requests==2.13.0

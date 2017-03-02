@@ -15,12 +15,19 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# DIR path
 ROOT_DIR = os.path.dirname(BASE_DIR)
+# print(ROOT_DIR)
 CONF_DIR = os.path.join(ROOT_DIR, '.conf')
 
-# Load config file
+# .conf
+# with open(os.path.join(CONF_DIR, 'settings_local.json')) as f:
+#     config_content = f.read()
+#     config = json.loads(config_content)
 config = json.loads(open(os.path.join(CONF_DIR, 'settings_local.json')).read())
+# print(config)
+
+# Templates path
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 # Static path
 STATIC_URL = '/static/'
@@ -29,12 +36,9 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
-# Template path
-TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
-
 # Media path
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -86,8 +90,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # MEDIA 변수
-                'django.template.context_processors.media',
             ],
         },
     },
@@ -109,11 +111,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/1.10/ref/settings/#auth-password-validators
-
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'member.backends.FacebookBackend',
-]
 
 AUTH_USER_MODEL = 'member.MyUser'
 
@@ -149,4 +146,5 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
+
 

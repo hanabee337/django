@@ -1,17 +1,19 @@
 """
+2017.02.23
 member app을 만들고
-abstractuser를 상속 받는 MyUser르르 구현
-이후 Migration
+AbstractUser를 상속받는 MyUser를 구현
+이후 migration
 """
 
 """
-로그인 부 생성
-view 생성
-def login_fbv
+2017.02.23
+- 로그인 뷰 생성!
+view생성
+def login_fbv(request):
 
-template 생성
+template연결
 member/login.html
 
 url연결
-urls.py에 member/login으로 연결되도록
+urls.py에 member/login/으로 연결되도록
 """
