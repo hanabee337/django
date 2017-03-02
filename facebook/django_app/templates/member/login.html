@@ -1,5 +1,7 @@
 {% extends 'common/base.html' %}
 
 {% block content %}
-<h1>Hello World!</h1>
+<div class="login-container">
+    <a href="https://www.facebook.com/v2.8/dialog/oauth?client_id={{ facebook_app_id }}&redirect_uri=http://127.0.0.1:8000/member/login/facebook/">페이스북으로 로그인</a>
+</div>
 {% endblock %}
