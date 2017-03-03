@@ -1,18 +1,24 @@
 from pprint import pprint
 
 import requests
-from django.shortcuts import render
+from django.contrib.auth import login, logout, authenticate
+from django.shortcuts import render, redirect
 
 from facebook import settings
 
 
 def login_fbv(request):
-    print('login_fbv')
+    # print('login_fbv')
     facebook_app_id = settings.config['facebook']['app_id']
     context = {
         'facebook_app_id': facebook_app_id,
     }
     return render(request, 'member/login.html', context)
+
+
+def logout_fbv(request):
+    logout(request)
+    return redirect('index')
 
 
 def login_facebook(request):
@@ -72,3 +78,30 @@ def login_facebook(request):
         pprint(dict_debug_token)
         USER_ID = dict_debug_token['data']['user_id']
         print('USER_ID : %s' % USER_ID)
+
+        # 해당 USER_ID로 graph API에 유저정보를 요청
+        url_api_user = 'https://graph.facebook.com/{user_id}'.format(
+            user_id=USER_ID
+        )
+        fields = [
+            'id',
+            'first_name',
+            'last_name',
+            'gender',
+            'picture',
+            'email',
+        ]
+        params = {
+            'fields': ','.join(fields),
+            'access_token': USER_ACCESS_TOKEN,
+        }
+        r = requests.get(url_api_user, params)
+        dict_user_info = r.json()
+        pprint(dict_user_info)
+
+        # 페이스북 유저 ID만으로 인증
+        user = authenticate(facebook_id=USER_ID)
+        # 페이스북 유저 ID와 graph API에 요청한 dict_user_info로 인증
+        # user = authenticate(facebook_id=USER_ID, extra_fields=dict_user_info)
+        login(request, user)
+        return redirect('index')
