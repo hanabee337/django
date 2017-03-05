@@ -9,20 +9,24 @@ https://docs.djangoproject.com/en/1.10/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.10/ref/settings/
 
+실습 - 2017.02.24
 1. config변수에 .conf/settings_local.json파일 내용 불러와 할당
 2. SECRET_KEY에 config변수에서 해당 값 불러와서 할당
 """
 import json
 import os
+from pathlib import Path
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ROOT_DIR = os.path.dirname(BASE_DIR)
-CONF_DIR = os.path.join(ROOT_DIR, '.conf')
+# ROOT_DIR = os.path.dirname(BASE_DIR)
+# CONF_DIR = os.path.join(ROOT_DIR, '.conf')
+# config_content = open(os.path.join(CONF_DIR, 'settings_local.json')).read()
+# print(config_content)
+# config = json.loads(config_content)
+# print(config)
 
-config_content = open(os.path.join(CONF_DIR, 'settings_local.json')).read()
-print(config_content)
-
+config_content = Path(__file__).parents[2].joinpath('.conf', 'settings_local.json').open().read()
 config = json.loads(config_content)
 print(config)
 
