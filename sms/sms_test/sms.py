@@ -2,7 +2,13 @@
 1. .conf 폴더의 settings_local.json 파일 내용을 불러와
     json.loads()하여 config 변수에 할당(2017.02.24)
 2. http://www.coolsms.co.kr/Python_SDK_EXAMPLE_Message에 있는 SMS(단문) 발송 구현해보기
+
+3. sms에 view를 생성 (index)
+수신자번호, 메시지를 입력받을수 있는 Form클래스 구현
+해당 Form에서 데이터를 받아 문자를 전송하도록 함
+끝
 """
+
 import json
 import os
 import sys
