@@ -3,7 +3,7 @@
 {% block content %}
     <h1>SMS Index Page</h1>
     <form action="" method="POST">{% csrf_token %}
-        {{ forms }}
+        {{ form }}
         <button type="submit">Send SMS</button>
     </form>
 {% endblock %}
