@@ -43,6 +43,13 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
+deploy_file = open(os.path.join(CONF_DIR, 'settings_deploy.json')).read()
+print(deploy_file)
+deploy = json.loads(deploy_file)
+print(deploy)
+
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -102,9 +109,17 @@ WSGI_APPLICATION = 'deploy_ec2.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': config['db']['engine'],
+        'NAME': config['db']['name'],
+        'USER': config['db']['user'],
+        'PASSWORD': config['db']['password'],
+        'HOST': config['db']['host'],
+        'PORT': config['db']['port']
     }
 }
 
