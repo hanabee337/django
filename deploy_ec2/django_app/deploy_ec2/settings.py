@@ -26,8 +26,9 @@ print(secret_key_file)
 config_common = json.loads(secret_key_file)
 print(config_common)
 
-config_file = open(os.path.join(CONF_DIR, 'settings_local.json')).read()
-print(config_file)
+CONFIG_FILE_NAME = 'settings_local.json' if DEBUG else 'settings_deploy.json'
+config_file = open(os.path.join(CONF_DIR, CONFIG_FILE_NAME)).read()
+print('config_file: {}'.format(config_file))
 config = json.loads(config_file)
 print(config)
 
