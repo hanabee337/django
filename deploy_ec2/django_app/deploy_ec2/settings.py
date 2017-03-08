@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import json
 import os
 
+DEBUG = os.environ.get('MODE') == 'DEBUG'
+print('DEBUG :{} '.format(DEBUG))
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -43,12 +46,6 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
-deploy_file = open(os.path.join(CONF_DIR, 'settings_deploy.json')).read()
-print(deploy_file)
-deploy = json.loads(deploy_file)
-print(deploy)
-
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
@@ -57,8 +54,6 @@ print(deploy)
 SECRET_KEY = config_common['django']['secret_key']
 print(SECRET_KEY)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = config['django']['allowed_hosts']
 
