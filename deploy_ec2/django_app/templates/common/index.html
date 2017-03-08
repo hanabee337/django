@@ -1,5 +1,9 @@
 {% extends 'common/base.html' %}
+{% load static %}
 
 {% block content %}
 <h1>Hello, World!</h1>
+<div>
+    <img src="{% static 'images/background.gif' %}" alt="">
+</div>
 {% endblock %}
