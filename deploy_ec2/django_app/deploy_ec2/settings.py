@@ -13,22 +13,30 @@ import json
 import os
 
 DEBUG = os.environ.get('MODE') == 'DEBUG'
+STORAGE_S3 = os.environ.get('STORAGE') == 'S3' or DEBUG is False
 print('DEBUG :{} '.format(DEBUG))
+print('STORAGE_S3 : {}'.format(STORAGE_S3))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_DIR = os.path.dirname(BASE_DIR)
 CONF_DIR = os.path.join(ROOT_DIR, '.conf-secret')
 print(CONF_DIR)
-secret_key_file = open(os.path.join(CONF_DIR, 'settings_common.json')).read()
-print(secret_key_file)
-config_common = json.loads(secret_key_file)
-print(config_common)
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
+
+# 1. settings_common.json의 경로를 CONFIG_FILE_COMMON에 할당
+CONFIG_FILE_COMMON = os.path.join(CONF_DIR, 'settings_common.json')
+
+# 2. settings_local.json의 경로를 CONFIG_FILE에 할당
 CONFIG_FILE_NAME = 'settings_local.json' if DEBUG else 'settings_deploy.json'
 config_file = open(os.path.join(CONF_DIR, CONFIG_FILE_NAME)).read()
 print('config_file: {}'.format(config_file))
+
+# 3. CONFIG_FILE_COMMON경로의 파일을 읽어 json.loads()한 결과를 config_common에 할당
+config_common = json.loads(open(CONFIG_FILE_COMMON).read())
+
+# 4. CONFIG_FILE경로의 파일을 읽어 json.loads()한 결과를 config에 할당
 config = json.loads(config_file)
 print(config)
 
@@ -40,15 +48,36 @@ for key, key_dict in config_common.items():
         config[key][inner_key] = inner_key_dict
 print(config)
 
-TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
-#static settings
+# AWS
+AWS_ACCESS_KEY_ID = config['aws']['access_key_id']
+AWS_SECRET_ACCESS_KEY = config['aws']['secret_access_key']
+
+AWS_S3_HOST = 's3.{}.amazonaws.com'.format(config['aws']['s3_region'])
+AWS_S3_SIGNATURE_VERSION = config['aws']['s3_signature_version']
+AWS_STORAGE_BUCKET_NAME = config['aws']['s3_storage_bucket_name']
+AWS_S3_CUSTOM_DOMAIN = '{}.s3.amazonaws.com'.format(AWS_STORAGE_BUCKET_NAME)
+
+
+# static settings
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
-STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
-STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     STATIC_DIR,
 ]
+
+if STORAGE_S3:
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    STATIC_URL = 's3.{region}.amazonaws.com/{bucket_name}/'.format(
+        region=config['aws']['s3_region'],
+        bucket_name=config['aws']['s3_storage_bucket_name']
+    )
+else:
+    STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
+    STATIC_URL = '/static/'
+
+
+# media settings
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 
@@ -58,7 +87,6 @@ MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config_common['django']['secret_key']
 print(SECRET_KEY)
-
 
 ALLOWED_HOSTS = config['django']['allowed_hosts']
 
@@ -71,6 +99,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'storages',
 
     'member'
 ]
