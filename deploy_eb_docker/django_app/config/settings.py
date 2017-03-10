@@ -53,7 +53,8 @@ STATIC_URL = '/static/'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config['django']['secret_key']
 
-ALLOWED_HOSTS = config['django']['allowed_hosts']
+# ALLOWED_HOSTS = config['django']['allowed_hosts']
+ALLOWED_HOSTS = []
 
 # Application definition
 
