@@ -85,10 +85,9 @@ if STORAGE_S3:
 else:
     STATIC_ROOT = os.path.join(ROOT_DIR, 'static_root')
     STATIC_URL = '/static/'
-
-# media settings
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
+    # media settings
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = os.path.join(ROOT_DIR, 'media')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
