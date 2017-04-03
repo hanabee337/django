@@ -153,7 +153,7 @@ if DEBUG and DB_RDS:
     config_db = config['db_rds']
 else:
     # 그 외의 경우에는 해당 db설정을 따른다.
-    config_db = config['db_rds']
+    config_db = config['db']
 DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
